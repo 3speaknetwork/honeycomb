@@ -7,7 +7,8 @@ const {
   store,
   extend,
   remove,
-  contract_close
+  contract_close,
+  update_metadata,
 } = require("./rollups");
 const { spk_send, send, shares_claim } = require('./send')
 const {

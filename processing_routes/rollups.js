@@ -295,6 +295,7 @@ exports.channel_update = (json, from, active, pc) => {
         proffer.n = { // nodes to store
           [`1`]: from
         }
+        if (json.m && typeof json.m == 'string')proffer.m = json.m //memo
         proffer.nt = "1"
         var cids = json.c.split(',')
         var proms = []
@@ -731,6 +732,36 @@ exports.contract_close = (json, from, active, pc) => {
               ops.push({ type: "del", path: ["chrono", contract.e] });
               store.batch(ops, [resolve, reject]);
             })
+        } else {
+          pc[0](pc[2]);
+        }
+    })
+  } else {
+    pc[0](pc[2]);
+  }
+};
+
+/*
+only owner can update metadata
+json.id = contract id
+json.m = memo (string only)
+*/
+
+exports.update_metadata = (json, from, active, pc) => {
+  if (active && json.id && json.m && typeof json.m == "string") {
+    var Pcontract = getPathObj(["contract", from, json.id])
+    Promise.all([Pstats, Pcontract]).then(mem => {
+      var contract = mem[0],
+        ops = [],
+        err = '' //no log no broca?
+        if(contract.e){
+            contract.m = json.m
+            ops.push({
+              type: "put",
+              path: ["contract", from, json.id],
+              data: contract,
+            });
+            store.batch(ops, pc);
         } else {
           pc[0](pc[2]);
         }

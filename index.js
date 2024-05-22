@@ -334,6 +334,7 @@ function startApp() {
   processor.on("channel_open", HR.channel_open)
   processor.on("channel_update", HR.channel_update)
   processor.on("contract_close", HR.contract_close)
+  processor.on("update_metadata", HR.update_metadata)
   processor.on("store", HR.store)
   processor.on("extend", HR.extend)
   processor.on("remove", HR.remove)

@@ -2963,6 +2963,7 @@ exports.user = (req, res, next) => {
                 res.send(
                   JSON.stringify(
                     {
+                      name: un,
                       balance: v[0],
                       claim: v[9],
                       drop: {

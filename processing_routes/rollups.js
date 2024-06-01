@@ -659,10 +659,6 @@ exports.contract_close = (json, from, active, pc) => {
         contract = mem[1],
         ops = [],
         err = '' //no log no broca?
-        if(json.block_num < parseInt(json.id.split(':')[2]) + (28800 * 30)){
-          brocaString = broca_calc(broca, pow, stats, json.block_num),
-          broca = parseInt(brocaString.split(',')[0])
-        }
         if(contract.e){
             var extentions = []
             try{extentions = contract.ex.split(',')} catch(e){}

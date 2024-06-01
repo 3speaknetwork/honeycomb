@@ -664,7 +664,7 @@ exports.contract_close = (json, from, active, pc) => {
             try{extentions = contract.ex.split(',')} catch(e){}
             var promises = [], original = 0
             if(json.block_num < parseInt(json.id.split(':')[2]) + (28800 * 30)){
-              original = parseInt(contract.r((parseInt(json.id.split(':')[2]) + (28800 * 30) - json.block_num)/(28800 * 30)))
+              original = parseInt(contract.r * ((parseInt(json.id.split(':')[2]) + (28800 * 30) - json.block_num)/(28800 * 30)))
               promises.push(getPathObj(["broca", contract.f]))
               promises.push(getPathObj(["spow", contract.f]))
             }

@@ -730,7 +730,7 @@ exports.contract_close = (json, from, active, pc) => {
                 data: `${contract.i} canceled by file owner.`,
               });
               ops.push({ type: "del", path: ["chrono", contract.e] });
-              store.batch(ops, [resolve, reject]);
+              store.batch(ops, pc);
             })
         } else {
           pc[0](pc[2]);

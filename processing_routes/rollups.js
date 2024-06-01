@@ -726,7 +726,7 @@ exports.contract_close = (json, from, active, pc) => {
               ops.push({ type: "del", path: ['cPointers', contract.i] });
               ops.push({
                 type: "put",
-                path: ["feed", `${json.block_num}:vop_${json.transaction_id}`],
+                path: ["feed", `${json.block_num}:${json.transaction_id}`],
                 data: `${contract.i} canceled by file owner.`,
               });
               ops.push({ type: "del", path: ["chrono", contract.e] });

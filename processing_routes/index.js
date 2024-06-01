@@ -140,6 +140,8 @@ module.exports = {
   store,
   extend,
   remove,
+  contract_close,
+  update_metadata,
   register_service,
   register_service_type,
   validator_burn,

@@ -121,7 +121,11 @@ exports.register_authority = (json, from, active, pc) => {
     json.pubKey &&
     typeof json.pubKey == "string" &&
     json.pubKey.substr(0, 3) == "STM" && json.pubKey.length == 53) {
-    var ops = [{ type: "put", path: ["authorities", from], data: json.pubKey }];
+    var ops = [{ type: "put", path: ["authorities", from], data: json.pubKey }, {
+      type: "put",
+      path: ["feed", `${json.block_num}:${json.transaction_id}`],
+      data: `${from} registered a public key.`,
+    }];
     store.batch(ops, pc);
   } else {
     pc[0](pc[2]);

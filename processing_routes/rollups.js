@@ -741,7 +741,7 @@ exports.contract_close = (json, from, active, pc) => {
                 data: `${contract.i} canceled by file owner.`,
               });
               ops.push({ type: "del", path: ["chrono", contract.e] });
-              if (config.hookurl || config.status)postToDiscord(msg, `${json.block_num}:${json.transaction_id}`);
+              if (config.hookurl || config.status)postToDiscord(`${contract.i} canceled by file owner.`, `${json.block_num}:${json.transaction_id}`);
               if (process.env.npm_lifecycle_event == "test") pc[2] = ops;
               store.batch(ops, pc);
             })

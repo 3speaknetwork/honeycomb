@@ -197,7 +197,7 @@ exports.channel_open = (json, from, active, pc) => {
       if (json.broca > broca || json.broca < stats.channel_min) err += `@${from} doesn't have enough BROCA to build a channel. `;
       if (json.slots && template.s != json?.slots.split(',').length) err += `Slots mismatch.`;//checker for slots against contract... enforcement of benificaries
       if (!err) {
-        proffer.i = `${from}:${json.contract}:${json.block_num}`
+        proffer.i = `${from}:${json.contract}:${json.block_num}:${json.transaction_num}`
         proffer.t = json.to //to
         proffer.f = from //from
         proffer.b = json.broker //broker
@@ -651,12 +651,14 @@ Contract close allows the file owner to remove the files from the incentivized s
 */
 
 exports.contract_close = (json, from, active, pc) => {
-  if (active) {
+  if (active && json.contract.indexOf(':') > 0){
     var Pstats = getPathObj(["stats"])
     var Pcontract = getPathObj(["contract", from, json.id])
-    Promise.all([Pstats, Pcontract]).then(mem => {
+    var Pproffer = getPathObj(['proffer', from, json.contract.split(":")[0], json.contract])
+    Promise.all([Pstats, Pcontract, Pproffer]).then(mem => {
       var stats = mem[0],
         contract = mem[1],
+        proffer = mem[2],
         ops = [],
         err = '' //no log no broca?
         if(contract.e){
@@ -730,6 +732,29 @@ exports.contract_close = (json, from, active, pc) => {
                 data: `${contract.i} canceled by file owner.`,
               });
               ops.push({ type: "del", path: ["chrono", contract.e] });
+              store.batch(ops, pc);
+            })
+        } else if(proffer.e){
+          var promises = []
+          promises.push(getPathObj(["broca", proffer.f]))
+          promises.push(getPathObj(["spow", proffer.f]))
+          Promise.all(promises).then(exts =>{
+              ops.push({
+                type: 'put',
+                path: ['broca', proffer.f],
+                data: broca_calc(exts[0], exts[1], stats, json.block_num, proffer.r)
+              })
+              ops.push({
+                type: "del",
+                path: ['proffer', from, json.contract.split(":")[0], json.contract],
+                data: proffer,
+              });
+              ops.push({
+                type: "put",
+                path: ["feed", `${json.block_num}:${json.transaction_id}`],
+                data: `${json.contract} canceled by file owner.`,
+              });
+              ops.push({ type: "del", path: ["chrono", proffer.e] });
               store.batch(ops, pc);
             })
         } else {

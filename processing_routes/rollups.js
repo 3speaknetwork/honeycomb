@@ -733,12 +733,21 @@ exports.contract_close = (json, from, active, pc) => {
                 path: ["stats"],
                 data: stats
               });
+              ops.push({
+                type: "del",
+                path: ['ben', from, json.id.split(":")[0]]
+              });
               ops.push({ type: "del", path: ['contract', contract.t, contract.i] });
               ops.push({ type: "del", path: ['cPointers', contract.i] });
               ops.push({
                 type: "put",
                 path: ["feed", `${json.block_num}:${json.transaction_id}`],
                 data: `${contract.i} canceled by file owner.`,
+              });
+
+              ops.push({
+                type: "del",
+                path: ['proffer', from, json.id.split(":")[0]]
               });
               ops.push({ type: "del", path: ["chrono", contract.e] });
               if (config.hookurl || config.status)postToDiscord(`${contract.i} canceled by file owner.`, `${json.block_num}:${json.transaction_id}`);
@@ -757,13 +766,11 @@ exports.contract_close = (json, from, active, pc) => {
               })
               ops.push({
                 type: "del",
-                path: ['proffer', from, json.id.split(":")[0]],
-                data: proffer,
+                path: ['proffer', from, json.id.split(":")[0]]
               });
               ops.push({
                 type: "del",
-                path: ['ben', from, json.id.split(":")[0]],
-                data: proffer,
+                path: ['ben', from, json.id.split(":")[0]]
               });
               ops.push({
                 type: "put",

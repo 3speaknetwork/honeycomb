@@ -1427,7 +1427,7 @@ function ipfspromise(hash, address = 0) {
     catIPFS(hash, address, ipfslinks);
     setTimeout(() => {
       if(ipfslinks.length >= address + 2)ipfspromise(hash, address + 1).then(x => resolve(x)).catch(e => {})
-    },2000)
+    },5000)
     function catIPFS(hash, i, arr) {
       fetch(arr[i] + hash)
         .then((r) => r.text())

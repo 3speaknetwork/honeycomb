@@ -199,7 +199,7 @@ exports.channel_open = (json, from, active, pc) => {
       if (json.broca > broca || json.broca < stats.channel_min) err += `@${from} doesn't have enough BROCA to build a channel. `;
       if (json.slots && template.s != json?.slots.split(',').length) err += `Slots mismatch.`;//checker for slots against contract... enforcement of benificaries
       if (!err) {
-        proffer.i = `${from}:${json.contract}:${json.block_num}:${json.transaction_id}`
+        proffer.i = `${from}:${json.contract}:${json.block_num}-${json.transaction_id}`
         proffer.t = json.to //to
         proffer.f = from //from
         proffer.b = json.broker //broker

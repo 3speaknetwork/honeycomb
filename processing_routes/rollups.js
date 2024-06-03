@@ -800,7 +800,7 @@ json.m = memo (string only)
 exports.update_metadata = (json, from, active, pc) => {
   if (active && json.id && json.m && typeof json.m == "string") {
     var Pcontract = getPathObj(["contract", from, json.id])
-    Promise.all([Pstats, Pcontract]).then(mem => {
+    Promise.all([Pcontract]).then(mem => {
       var contract = mem[0],
         ops = [],
         err = '' //no log no broca?

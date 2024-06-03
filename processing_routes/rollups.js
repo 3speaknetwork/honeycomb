@@ -654,7 +654,7 @@ exports.contract_close = (json, from, active, pc) => {
   if (active && json?.id.indexOf(':').length > 0){
     var Pstats = getPathObj(["stats"])
     var Pcontract = getPathObj(["contract", from, json.id])
-    var Pproffer = getPathObj(['proffer', from, json.id.split(":")[0])
+    var Pproffer = getPathObj(['proffer', from, json.id.split(":")[0]])
     Promise.all([Pstats, Pcontract, Pproffer]).then(mem => {
       var stats = mem[0],
         contract = mem[1],

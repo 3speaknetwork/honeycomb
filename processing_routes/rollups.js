@@ -651,7 +651,7 @@ Contract close allows the file owner to remove the files from the incentivized s
 */
 
 exports.contract_close = (json, from, active, pc) => {
-  if (active && json?.id.indexOf(':').length > 0){
+  if (active && json?.id.indexOf(':') > 0){
     var Pstats = getPathObj(["stats"])
     var Pcontract = getPathObj(["contract", from, json.id])
     var Pproffer = getPathObj(['proffer', from, json.id.split(":")[0]])

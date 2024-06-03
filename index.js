@@ -1421,34 +1421,31 @@ function unwrapOps(arr) {
   });
 }
 
-function ipfspromise(hash) {
+function ipfspromise(hash, address = 0) {
   return new Promise((resolve, reject) => {
-    const ipfslinks = config.ipfsLinks;
-    if (config.ipfshost == "ipfs") {
-      catIPFS(hash, 0, ipfslinks);
-    } else {
-      catIPFS(hash, 1, ipfslinks);
-    }
+    var ipfslinks = config.ipfsLinks
+    catIPFS(hash, address, ipfslinks);
+    setTimeout(() => {
+      if(ipfslinks.length >= address + 2)ipfspromise(hash, address + 1).then(x => resolve(x)).catch(e => {})
+    },1000)
     function catIPFS(hash, i, arr) {
-      if (arr[i])
-        fetch(arr[i] + hash)
-          .then((r) => r.text())
-          .then((res) => {
-            if (res.split("")[0] == "<" || res.split("")[0] == "D")
-              catIPFS(hash, i + 1, ipfslinks);
-            else {
-              console.log("Retrieved:", hash)
-              resolve(res);
-            }
-          })
-          .catch((e) => {
-            console.log(e)
-            if (i < arr.length - 1) {
-              catIPFS(hash, i + 1, ipfslinks);
-            } else {
-              reject(e);
-            }
-          });
+      fetch(arr[i] + hash)
+        .then((r) => r.text())
+        .then((res) => {
+          try {
+            const json = JSON.parse(res);
+            resolve(res);
+          } catch (e) {
+            catIPFS(hash, i + 1, ipfslinks);
+          }
+        })
+        .catch((e) => {
+          if (i < arr.length - 1) {
+            catIPFS(hash, i + 1, ipfslinks);
+          } else {
+            console.log(hash, 'all failed to respond')
+          }
+        });
     }
   });
 }

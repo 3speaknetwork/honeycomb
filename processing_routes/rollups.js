@@ -126,6 +126,8 @@ exports.register_authority = (json, from, active, pc) => {
       path: ["feed", `${json.block_num}:${json.transaction_id}`],
       data: `${from} registered a public key.`,
     }];
+    if (config.hookurl || config.status)postToDiscord(msg, `${json.block_num}:${json.transaction_id}`);
+    if (process.env.npm_lifecycle_event == "test") pc[2] = ops;
     store.batch(ops, pc);
   } else {
     pc[0](pc[2]);
@@ -739,6 +741,8 @@ exports.contract_close = (json, from, active, pc) => {
                 data: `${contract.i} canceled by file owner.`,
               });
               ops.push({ type: "del", path: ["chrono", contract.e] });
+              if (config.hookurl || config.status)postToDiscord(msg, `${json.block_num}:${json.transaction_id}`);
+              if (process.env.npm_lifecycle_event == "test") pc[2] = ops;
               store.batch(ops, pc);
             })
         } else if(proffer.e){
@@ -767,6 +771,8 @@ exports.contract_close = (json, from, active, pc) => {
                 data: `${json.id} canceled by channel owner.`,
               });
               ops.push({ type: "del", path: ["chrono", proffer.e] });
+              if (config.hookurl || config.status)postToDiscord(msg, `${json.block_num}:${json.transaction_id}`);
+              if (process.env.npm_lifecycle_event == "test") pc[2] = ops;
               store.batch(ops, pc);
             })
         } else {
@@ -798,6 +804,8 @@ exports.update_metadata = (json, from, active, pc) => {
               path: ["contract", from, json.id],
               data: contract,
             });
+            if (config.hookurl || config.status)postToDiscord(msg, `${json.block_num}:${json.transaction_id}`);
+            if (process.env.npm_lifecycle_event == "test") pc[2] = ops;
             store.batch(ops, pc);
         } else {
           pc[0](pc[2]);

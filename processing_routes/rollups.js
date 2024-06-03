@@ -654,13 +654,20 @@ exports.contract_close = (json, from, active, pc) => {
   if (active && json?.id.indexOf(':').length > 0){
     var Pstats = getPathObj(["stats"])
     var Pcontract = getPathObj(["contract", from, json.id])
-    var Pproffer = getPathObj(['proffer', from, json.id.split(":")[0], json.id])
+    var Pproffer = getPathObj(['proffer', from, json.id.split(":")[0])
     Promise.all([Pstats, Pcontract, Pproffer]).then(mem => {
       var stats = mem[0],
         contract = mem[1],
         proffer = mem[2],
         ops = [],
-        err = '' //no log no broca?
+        err = '', //no log no broca?
+        type = "1"
+        Object.keys(proffer).forEach(item => {
+          if (proffer[item].i == json.id){
+            type = item
+            proffer = proffer[item]
+          }
+        })
         if(contract.e){
             var extentions = []
             try{extentions = contract.ex.split(',')} catch(e){}
@@ -746,7 +753,12 @@ exports.contract_close = (json, from, active, pc) => {
               })
               ops.push({
                 type: "del",
-                path: ['proffer', from, json.id.split(":")[0], json.id],
+                path: ['proffer', from, json.id.split(":")[0], type, json.id],
+                data: proffer,
+              });
+              ops.push({
+                type: "del",
+                path: ['ben', from, json.id.split(":")[0]],
                 data: proffer,
               });
               ops.push({

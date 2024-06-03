@@ -753,7 +753,7 @@ exports.contract_close = (json, from, active, pc) => {
               })
               ops.push({
                 type: "del",
-                path: ['proffer', from, json.id.split(":")[0], type, json.id],
+                path: ['proffer', from, json.id.split(":")[0]],
                 data: proffer,
               });
               ops.push({
@@ -764,7 +764,7 @@ exports.contract_close = (json, from, active, pc) => {
               ops.push({
                 type: "put",
                 path: ["feed", `${json.block_num}:${json.transaction_id}`],
-                data: `${json.id} canceled by file owner.`,
+                data: `${json.id} canceled by channel owner.`,
               });
               ops.push({ type: "del", path: ["chrono", proffer.e] });
               store.batch(ops, pc);

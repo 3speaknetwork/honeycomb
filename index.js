@@ -1,5 +1,5 @@
 const config = require("./config");
-const VERSION = "v1.2.0-t14";
+const VERSION = "v1.2.0-t15";
 exports.VERSION = VERSION;
 exports.exit = exit;
 exports.processor = processor;
@@ -1442,6 +1442,7 @@ function ipfspromise(hash) {
             }
           })
           .catch((e) => {
+            console.log(e)
             if (i < arr.length - 1) {
               catIPFS(hash, i + 1, ipfslinks);
             } else {

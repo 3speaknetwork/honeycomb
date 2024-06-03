@@ -651,10 +651,10 @@ Contract close allows the file owner to remove the files from the incentivized s
 */
 
 exports.contract_close = (json, from, active, pc) => {
-  if (active && json.contract.indexOf(':') > 0){
+  if (active && json?.id.indexOf(':').length > 0){
     var Pstats = getPathObj(["stats"])
     var Pcontract = getPathObj(["contract", from, json.id])
-    var Pproffer = getPathObj(['proffer', from, json.contract.split(":")[0], json.contract])
+    var Pproffer = getPathObj(['proffer', from, json.id.split(":")[0], json.id])
     Promise.all([Pstats, Pcontract, Pproffer]).then(mem => {
       var stats = mem[0],
         contract = mem[1],
@@ -746,13 +746,13 @@ exports.contract_close = (json, from, active, pc) => {
               })
               ops.push({
                 type: "del",
-                path: ['proffer', from, json.contract.split(":")[0], json.contract],
+                path: ['proffer', from, json.id.split(":")[0], json.id],
                 data: proffer,
               });
               ops.push({
                 type: "put",
                 path: ["feed", `${json.block_num}:${json.transaction_id}`],
-                data: `${json.contract} canceled by file owner.`,
+                data: `${json.id} canceled by file owner.`,
               });
               ops.push({ type: "del", path: ["chrono", proffer.e] });
               store.batch(ops, pc);

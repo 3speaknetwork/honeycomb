@@ -302,6 +302,7 @@ exports.channel_update = (json, from, active, pc) => {
           [`1`]: from
         }
         if (json.m && typeof json.m == 'string')proffer.m = json.m //memo
+        proffer.m = proffer.m.replace(/[^a-zA-Z0-9,:\/.-_?#&='+:;! ]/gm, '-')
         proffer.nt = "1"
         var cids = json.c.split(',')
         var proms = []
@@ -806,6 +807,8 @@ exports.update_metadata = (json, from, active, pc) => {
         err = '' //no log no broca?
         if(contract.e){
             contract.m = json.m
+            //replace all non-allows chars with -
+            contract.m = contract.m.replace(/[^a-zA-Z0-9,:\/.-_?#&='+:;! ]/gm, '-')
             ops.push({
               type: "put",
               path: ["contract", from, json.id],

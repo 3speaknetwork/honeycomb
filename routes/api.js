@@ -77,8 +77,27 @@ exports.cid_contract = (req, res, next) =>{
             )
           )
         }
-        let stats = mem[1]
-        let contractp = getPathObj(["contract", mem[0].split(',')[0], mem[0].split(',')[1]])
+        let stats = mem[1], party1, contract
+        try {
+          party1 = mem[0].split(',')[0]
+          contract = mem[0].split(',')[1]
+        } catch (error) {
+          res.send(
+            JSON.stringify(
+              {
+                result: "Not Found",
+                head_block: RAM.head,
+                behind: RAM.behind,
+                node: config.username,
+                VERSION,
+                realtime: mem[1].realtime,
+              },
+              null,
+              3
+            )
+          )
+        }
+        let contractp = getPathObj(["contract", party1, contract])
         Promise.all([contractp])
           .then((contract) => {
             res.send(

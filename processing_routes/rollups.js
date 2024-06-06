@@ -301,8 +301,10 @@ exports.channel_update = (json, from, active, pc) => {
         proffer.n = { // nodes to store
           [`1`]: from
         }
-        if (json.m && typeof json.m == 'string')proffer.m = json.m //memo
-        proffer.m = proffer.m.replace(/[^a-zA-Z0-9,:\/.-_?#&='+:;! ]/gm, '-')
+        if (json.m && typeof json.m == 'string'){
+          proffer.m = json.m //memo
+          proffer.m = proffer.m.replace(/[^a-zA-Z0-9,:\/.-_?#&='+:;! ]/gm, '-')
+        }
         proffer.nt = "1"
         var cids = json.c.split(',')
         var proms = []

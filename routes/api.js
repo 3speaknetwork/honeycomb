@@ -62,7 +62,7 @@ exports.cid_contract = (req, res, next) =>{
     Promise.all([cpp, statsp])
       .then((mem) => {
         if(typeof mem[0] != 'string'){
-          res.send(
+          return res.send(
             JSON.stringify(
               {
                 result: 'Not found',
@@ -89,7 +89,7 @@ exports.cid_contract = (req, res, next) =>{
         let contractp = getPathObj(["contract", party1, contract])
         Promise.all([contractp])
           .then((contract) => {
-            res.send(
+            return res.send(
               JSON.stringify(
                 {
                   result: contract[0],

@@ -15,6 +15,7 @@ function report(plas, con, poa) {
                     const nodes = Object.keys(poa[`${i + offset}`][CID])
                     if(nodes.length){
                         for(var j = 0; j < nodes.length; j++){    
+                            console.log(poa[`${i + offset}`][CID])
                             formated.push([nodes[j], poa[`${i + offset}`][CID][nodes[j]].Elapsed, poa[`${i + offset}`][CID][nodes[j]].Message])
                         }
                         if(formated.length > 2)val.push(formated)

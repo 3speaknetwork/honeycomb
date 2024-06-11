@@ -36,9 +36,14 @@ var PoA = {
         }
         if (promises.length) Promise.all(promises).then(contracts => {
           for (var i = 0; i < contracts.length; i++) {
-            const reward = parseInt((contracts[i].p * contracts[i].r * contracts[i].df[b.report.v[i][0]]) / (contracts[i].u * 3))
-            console.log({contract: contracts[i], reward})
-            cBroca[b.self] = cBroca[b.self] ? cBroca[b.self] + reward : reward //validator reward
+            try {
+              const reward = parseInt((contracts[i].p * contracts[i].r * contracts[i].df[b.report.v[i][0]]) / (contracts[i].u * 3))
+              console.log({contract: contracts[i], reward})
+              cBroca[b.self] = cBroca[b.self] ? cBroca[b.self] + reward : reward //validator reward
+            } catch (e) {
+              console.log(e)
+              continue
+            }
             /*
             preferential treatment for the account that has paid for this period of the contract
             get and maintain STDDEV of validation times

@@ -215,6 +215,7 @@ exports.validator_burn = function (json, from, active, pc) {
         if (
           (burn >= parseFloat(stats.IPFSRate) * ( 1 + Base64.toNumber(stats.validators_registered.split('')[0])) || node.val_code) && //fee to register validator node with increase every 64 registrations
           fbal >= burn &&
+          node.self == from &&
           active
         ) { 
           var msg = `@${from}| Burned ${parseFloat(

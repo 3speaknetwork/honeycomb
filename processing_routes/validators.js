@@ -15,6 +15,7 @@ var PoA = {
   Pending: {
       vals: 0
   },
+  // shunt to PoA, verifies inputs and manages storing the standard Report
   Check: function (b, rand, stats, val, cBroca, pc){
     var promises = []
     for(var i = 0; i < b.report.v.length; i++){
@@ -36,8 +37,13 @@ var PoA = {
         if (promises.length) Promise.all(promises).then(contracts => {
           for (var i = 0; i < contracts.length; i++) {
             const reward = parseInt((contracts[i].p * contracts[i].r * contracts[i].df[b.report.v[i][0]]) / (contracts[i].u * 3))
-            console.log({reward})
-            cBroca[b.self] = cBroca[b.self] ? cBroca[b.self] + reward : reward
+            console.log({contract: contracts[i], reward})
+            cBroca[b.self] = cBroca[b.self] ? cBroca[b.self] + reward : reward //validator reward
+            /*
+            preferential treatment for the account that has paid for this period of the contract
+            get and maintain STDDEV of validation times
+
+            */
             for(var j = 2; j < b.report.v[i].length; j ++){
               console.log({j})
               if(j < contracts[i].p + 2)cBroca[b.report.v[i][j][0]] = cBroca[b.report.v[i][j][0]] ? 
@@ -49,7 +55,9 @@ var PoA = {
             }
           }
           delete b.report.v
-          var ops = [{type: "put", path: ["markets", "node", b.self], data: b}, {type: "put", path: ["cbroca"], data: cBroca}]
+          var ops = [{type: "put", path: ["markets", "node", b.self], data: b}, 
+          {type: "put", path: ["cbroca"], data: cBroca},
+          {type: "put", path: ["stats"], data: stats}]
           store.batch(ops, pc)
       })
       else store.batch([{type: "put", path: ["markets", "node", b.self], data: b}], pc)
@@ -73,7 +81,7 @@ var PoA = {
       Promise.all([Pval, Pnode]).then(mem => {
           const val = mem[0],
               node = mem[1]
-          if (node.val_code && val[account]) {
+          if (node.val_code && val[node.val_code]) {
               const [gte, lte] = this.getRange(prand, account, val, stats)
               getPathSome(["IPFS"], { gte, lte }).then(items => { //need to wrap this call to 0 thru remainder 
                 var promises = [], toVerify = {}, BlackListed = []

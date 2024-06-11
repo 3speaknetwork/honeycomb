@@ -19,7 +19,7 @@ function report(plas, con, poa) {
                     if(nodes.length){
                         for(var j = 0; j < nodes.length; j++){    
                             console.log(poa[`${i + offset}`][CID].npid)
-                            if(poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed)formated.push([nodes[j], poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed, poa[`${i + offset}`][CID].npid[nodes[j]].Message])
+                            if(poa[`${i + offset}`]?.[CID].npid?.[nodes[j]].Elapsed)formated.push([nodes[j], poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed, poa[`${i + offset}`][CID].npid[nodes[j]].Message])
                         }
                         if(formated.length > 2)val.push(formated)
                     }

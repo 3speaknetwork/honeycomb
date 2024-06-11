@@ -210,6 +210,11 @@ var PoA = {
 exports.PoA = PoA;
 
 function PA (Name, CID, peerid, SALT, bn){
+  if(peerid.split(',').length > 1){
+    peerid = peerid.split(',')[0]
+    restOfPeerIDs = peerid.split(',').slice(1).join(',')
+    PA (Name, CID, restOfPeerIDs, SALT, bn)
+  }
   console.log("PA: ", Name, CID, peerid, SALT, bn)
   var socket = new WebSocketClient();
   socket.on('connect', (connection) => {
@@ -240,7 +245,7 @@ function PA (Name, CID, peerid, SALT, bn){
           if (config.mode == 'verbose') console.log('Validating Proof', { data })
       } else if (data.Status === "Valid") {
           if (config.mode == 'verbose') console.log('Proof Validated', { data })
-          if (PoA.Pending[`${bn % 200}`][CID])PoA.Pending[`${bn % 200}`][CID].npid[Name] = data
+          if (PoA.Pending[`${bn % 200}`][CID] && !PoA.Pending[`${bn % 200}`][CID].npid[Name].Message )PoA.Pending[`${bn % 200}`][CID].npid[Name] = data
           connection.close()
       } else if (data.Status === "Proof Invalid") {
           if (config.mode == 'verbose') console.log('Proof Invalid', { data })

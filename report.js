@@ -12,11 +12,11 @@ function report(plas, con, poa) {
                 for(var CID in poa[`${i + offset}`]){
                     console.log(`${i + offset}`, CID, poa[`${i + offset}`][CID])
                     var formated = [CID, `${i + offset}`]
-                    const nodes = Object.keys(poa[`${i + offset}`][CID])
+                    const nodes = Object.keys(poa[`${i + offset}`][CID].npid)
                     if(nodes.length){
                         for(var j = 0; j < nodes.length; j++){    
-                            console.log(poa[`${i + offset}`][CID])
-                            formated.push([nodes[j], poa[`${i + offset}`][CID][nodes[j]].Elapsed, poa[`${i + offset}`][CID][nodes[j]].Message])
+                            console.log(poa[`${i + offset}`][CID].npid)
+                            formated.push([nodes[j], poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed, poa[`${i + offset}`][CID].npid[nodes[j]].Message])
                         }
                         if(formated.length > 2)val.push(formated)
                     }

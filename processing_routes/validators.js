@@ -134,7 +134,7 @@ var PoA = {
                         }
                         Promise.all(promises).then(peerIDs => {
                           for (var i = 0; i < peerIDs.length; i++) {
-                              if(k[i][0]){
+                              if(k[i]){
                                 this.Pending[`${block % 200}`][k[i][0]] = {}
                               } else {
                                 console.log(k, i, peerIDs)

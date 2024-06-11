@@ -87,9 +87,10 @@ var PoA = {
                 console.log({items, gte, lte})
                 var promises = [], toVerify = {}, BlackListed = []
                 for(var i = 0; i < items.length; i++){
-                  BlackListed.push(this.BlackListed(items[i]))
+                  BlackListed.push(PoA.BlackListed(items[i]))
                   promises.push(getPathObj(['IPFS', items[i]]))
                 }
+                console.log({promises})
                 Promise.all(BlackListed).then(flags => {
                   console.log(flags)
                   for(var i = flags.length -1; i >= 0; i--){

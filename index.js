@@ -1424,16 +1424,18 @@ function unwrapOps(arr) {
 function ipfspromise(hash, address = 0) {
   return new Promise((resolve, reject) => {
     var ipfslinks = config.ipfsLinks
+    var done = false;
     catIPFS(hash, address, ipfslinks);
     setTimeout(() => {
-      if(ipfslinks.length >= address + 2)ipfspromise(hash, address + 1).then(x => resolve(x)).catch(e => {})
-    },10000)
+      if(!done && ipfslinks.length >= address + 2)ipfspromise(hash, address + 1).then(x => resolve(x)).catch(e => {})
+    }, 3000)
     function catIPFS(hash, i, arr) {
       fetch(arr[i] + hash)
         .then((r) => r.text())
         .then((res) => {
           try {
             const json = JSON.parse(res);
+            done = true;
             resolve(res);
           } catch (e) {
             catIPFS(hash, i + 1, ipfslinks);

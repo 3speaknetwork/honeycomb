@@ -122,7 +122,7 @@ var PoA = {
                                         k.push([dfKeys[j], toVerify[dfKeys[j]].n[node]])
                                         promises.push(getPathObj(['service', 'IPFS', toVerify[dfKeys[j]].n[node]]))
                                     }
-                                    //this.Pending[block % 200] = toVerify
+                                    this.Pending[block % 200] = toVerify
                                 }
                             }
                         }
@@ -200,6 +200,7 @@ var PoA = {
 exports.PoA = PoA;
 
 function PA (Name, CID, peerid, SALT, bn){
+  console.log("PA: ", Name, CID, peerid, SALT, bn)
   var socket = new WebSocketClient();
   socket.on('connect', (connection) => {
     setTimeout(() => {

@@ -95,8 +95,10 @@ var PoA = {
                   for(var i = flags.length -1; i >= 0; i--){
                     if(flags[i])promises.splice(i, 1)
                   }
+                  console.log({flags, promises})
                   Promise.all(promises).then(contractIDs=>{
                     promises = []
+                    console.log({contractIDs})
                     for(var i = 0; i < contractIDs.length; i++){
                       promises.push(getPathObj(['contract', contractIDs[i].split(',')[0], contractIDs[i].split(',')[1]]))
                       const asset = items[i].split("").reverse().join("")

@@ -12,7 +12,10 @@ function report(plas, con, poa) {
                 for(var CID in poa[`${i + offset}`]){
                     console.log(`${i + offset}`, CID, poa[`${i + offset}`][CID])
                     var formated = [CID, `${i + offset}`]
-                    const nodes = Object.keys(poa[`${i + offset}`][CID].npid)
+                    var nodes
+                    try {
+                        nodes = Object.keys(poa[`${i + offset}`][CID].npid)
+                    } catch (e){continue}
                     if(nodes.length){
                         for(var j = 0; j < nodes.length; j++){    
                             console.log(poa[`${i + offset}`][CID].npid)

@@ -36,8 +36,9 @@ var PoA = {
         }
         if (promises.length) Promise.all(promises).then(contracts => {
           for (var i = 0; i < contracts.length; i++) {
+            var reward = 0
             try {
-              const reward = parseInt((contracts[i].p * contracts[i].r * contracts[i].df[b.report.v[i][0]]) / (contracts[i].u * 3))
+              reward = parseInt((contracts[i].p * contracts[i].r * contracts[i].df[b.report.v[i][0]]) / (contracts[i].u * 3))
               console.log({contract: contracts[i], reward})
               cBroca[b.self] = cBroca[b.self] ? cBroca[b.self] + reward : reward //validator reward
             } catch (e) {

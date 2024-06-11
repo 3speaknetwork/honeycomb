@@ -39,7 +39,7 @@ const PoA = {
                                     toVerify[item].v = 0
                                     toVerify[item].npid = {}
                                     for (var node of toVerify[item].n) {
-                                        toVerify[item].npid[node] = j.length //?
+                                        toVerify[item].npid[node] = {} //?
                                         j.push([item, node])
                                         promises.push(getPathObj(['service', 'IPFS', node]))
                                     }

@@ -108,6 +108,7 @@ var PoA = {
                     }
                     if (promises.length) Promise.all(promises).then(contracts => {
                         promises = [], k = []
+                        console.log({contracts})
                         for (var i = 0; i < contracts.length; i++) {
                           const dfKeys =  contracts[i].df ? Object.keys(contracts[i].df) : []
                             for (var j = 0; j < dfKeys.length; j++) {
@@ -120,6 +121,7 @@ var PoA = {
                                     for (var node in toVerify[dfKeys[j]].n) {
                                         toVerify[dfKeys[j]].npid[node] = j.length //?
                                         k.push([dfKeys[j], toVerify[dfKeys[j]].n[node]])
+                                        console.log('toVerify',toVerify[dfKeys[j]].n[node])
                                         promises.push(getPathObj(['service', 'IPFS', toVerify[dfKeys[j]].n[node]]))
                                     }
                                     this.Pending[block % 200] = toVerify

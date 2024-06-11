@@ -84,6 +84,7 @@ var PoA = {
           if (node.val_code && val[node.val_code]) {
               const [gte, lte] = this.getRange(prand, account, val, stats)
               getPathSome(["IPFS"], { gte, lte }).then(items => { //need to wrap this call to 0 thru remainder 
+                console.log({items, gte, lte})
                 var promises = [], toVerify = {}, BlackListed = []
                 for(var i = 0; i < items.length; i++){
                   BlackListed.push(items[i])
@@ -149,7 +150,6 @@ var PoA = {
       }
       const gte = this.getPrand58(account, prand)
       const range = parseInt(((val[account] >= cutoff ? cutoff * 2 : val[account]||1) / total) * (stats.total_files * parseInt(stats.vals_target * 10000) / 288) * 7427658739)
-      console.log({range})
       const lte = Base58.fromNumber(Base58.toNumber(gte) + range)
       return [gte, lte]
   },

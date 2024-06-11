@@ -91,6 +91,7 @@ var PoA = {
                   promises.push(getPathObj(['IPFS', items[i]]))
                 }
                 Promise.all(BlackListed).then(flags => {
+                  console.log(flags)
                   for(var i = flags.length -1; i >= 0; i--){
                     if(flags[i])promises.splice(i, 1)
                   }

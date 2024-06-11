@@ -134,7 +134,12 @@ var PoA = {
                         }
                         Promise.all(promises).then(peerIDs => {
                           for (var i = 0; i < peerIDs.length; i++) {
-                              this.Pending[`${block % 200}`][k[i][0]] = {}
+                              if(k[i][0]){
+                                this.Pending[`${block % 200}`][k[i][0]] = {}
+                              } else {
+                                console.log(k, i, peerIDs)
+                                break
+                              }
                               k[i].push(peerIDs[i])
                               this.validate(k[i][0], k[i][1], k[i][2], prand, block)
                           }

@@ -84,22 +84,17 @@ var PoA = {
           if (node.val_code && val[node.val_code]) {
               const [gte, lte] = this.getRange(prand, account, val, stats)
               getPathSome(["IPFS"], { gte, lte }).then(items => { //need to wrap this call to 0 thru remainder 
-                console.log({items, gte, lte})
                 var promises = [], toVerify = {}, BlackListed = []
                 for(var i = 0; i < items.length; i++){
                   BlackListed.push(PoA.BlackListed(items[i]))
                   promises.push(getPathObj(['IPFS', items[i]]))
                 }
-                console.log({promises})
                 Promise.all(BlackListed).then(flags => {
-                  console.log(flags)
                   for(var i = flags.length -1; i >= 0; i--){
                     if(flags[i])promises.splice(i, 1)
                   }
-                  console.log({flags, promises})
                   Promise.all(promises).then(contractIDs=>{
                     promises = []
-                    console.log({contractIDs})
                     for(var i = 0; i < contractIDs.length; i++){
                       promises.push(getPathObj(['contract', contractIDs[i].split(',')[0], contractIDs[i].split(',')[1]]))
                       const asset = items[i].split("").reverse().join("")
@@ -112,7 +107,6 @@ var PoA = {
                     }
                     if (promises.length) Promise.all(promises).then(contracts => {
                         promises = [], k = []
-                        console.log({contracts})
                         for (var i = 0; i < contracts.length; i++) {
                           const dfKeys =  contracts[i].df ? Object.keys(contracts[i].df) : []
                             for (var j = 0; j < dfKeys.length; j++) {
@@ -134,7 +128,7 @@ var PoA = {
                         }
                         Promise.all(promises).then(peerIDs => {
                           for (var i = 0; i < peerIDs.length; i++) {
-                              if(k[i]){
+                              if(k[i][0]){
                                 this.Pending[`${block % 200}`][k[i][0]] = {}
                               } else {
                                 console.log(k, i, peerIDs)
@@ -178,7 +172,6 @@ var PoA = {
       return Base58.fromNumber(Number(r % 7427658739644928n))
   },
   validate: function (CID, Name, peerIDs, SALT, bn) {  
-    console.log("PoA: ",CID, Name, peerIDs, SALT, bn)
     peerids = peerIDs.split(',')
     for (var i = 0; i < peerids.length; i++) {
         PA (Name, CID, peerids[i], SALT, bn)
@@ -217,12 +210,9 @@ function PA (Name, CID, peerid, SALT, bn){
     setTimeout(() => {
       connection.close()
       console.log("Timeout:", CID)}, 240000)
-    console.log({ Name, CID, peerid, SALT })
     connection.send(JSON.stringify({ Name, CID, peerid, SALT }));
     connection.on('message', (event) => {
-      console.log(event)
       const data = event.utf8Data ? JSON.parse(event.utf8Data) : {}
-      console.log({data})
       //const stepText = document.querySelectorAll('.step-text');
       if (data.Status === 'Connecting to Peer') {
           if (config.mode == 'verbose') console.log('Connecting to Peer')

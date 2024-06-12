@@ -251,6 +251,8 @@ function PA (Name, CID, peerid, SALT, bn){
       } else if (data.Status === "Proof Invalid") {
           if (config.mode == 'verbose') console.log('Proof Invalid', { data })
           connection.close()
+      } else {
+        console.log('Unknown Status:', data)
       }
   })
   })

@@ -1088,7 +1088,14 @@ function startWith(hash, second) {
                       cleanState.stats.spk_val = "0.100000" //percent that goes toward validators
                       cleanState.stats.spk_dex = "0.100000" //percent set asside for DEX liquidity
                       cleanState.stats.spk_liq = "0.500000" //percent of above allocation subject to liquidity quality
-                      cleanState.stats.spk_interest_rate = 50
+                      cleanState.stats.spk_interest_rate = 50 // 2% of redeemed broca
+                      cleanState.stats.spk_interest_min = 200 // .5% of larynx
+                      cleanState.stats.spk_interest_ema = 1000 // 10% of larynx
+                      cleanState.stats.spk_clawback = 0 // all transfer burnrate
+                      cleanState.stats.broca_daily_ema = 1000 // 10% of larynx
+                      cleanState.stats.broca_daily_trend = 10000 // 100% of ema total
+                      cleanState.stats.target_utilization = 0 // 50% of SPK
+                      cleanState.stats.utilization = 1000 // 10% of spk utilized
                       cleanState.template = {
                         "0": {
                           i: "0",

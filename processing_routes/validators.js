@@ -249,7 +249,7 @@ function PA (Name, CID, peerid, SALT, bn){
       } else if (data.Status === "Valid") {
           //if (config.mode == 'verbose') 
             console.log('Proof Validated', { data })
-          if (PoA.Pending[`${bn % 200}`][CID] && !PoA.Pending[`${bn % 200}`][CID].npid[Name].Message )PoA.Pending[`${bn % 200}`][CID].npid[Name] = data
+          if (PoA.Pending[`${bn % 200}`][CID] && PoA.Pending[`${bn % 200}`][CID].npid[Name] && !PoA.Pending[`${bn % 200}`][CID].npid[Name].Message )PoA.Pending[`${bn % 200}`][CID].npid[Name] = data
           connection.close()
       } else if (data.Status === "Proof Invalid") {
           if (config.mode == 'verbose') console.log('Proof Invalid', { data })

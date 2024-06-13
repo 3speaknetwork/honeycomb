@@ -361,19 +361,39 @@ function dao(num) {
                 post = post + `*****\n### DEX Report\n#### Prices:\n* ${parseFloat(dex.hive.tick).toFixed(3)} HIVE per ${config.TOKEN}\n* ${parseFloat(dex.hbd.tick).toFixed(3)} HBD per ${config.TOKEN}\n#### Daily Volume:\n* ${parseFloat(vol / 1000).toFixed(3)} ${config.TOKEN}\n* ${parseFloat(vols / 1000).toFixed(3)} HIVE\n* ${parseFloat(parseInt(volhbd) / 1000).toFixed(3)} HBD\n*****\n`;
             }
             stats.movingWeight.dailyPool = bals.ra
-            const inflationHedge = parseInt(( bals.ra * (gov.t / stats.tokenSupply)))
+            const inflationHedge = parseInt(( bals.ra * (gov.t / stats.tokenSupply))) // reward gov holders with inflation to balance inflationary forces
             bals.rn = bals.rn + inflationHedge
-            var newSPK = parseInt(bals.ra / stats.spk_interest_rate)
-            spk.t += newSPK
-            spk.u += newSPK
             stats.spk_interest_rate++
             bals.ra -= inflationHedge
             bals.rb += bals.ra
             bals.ra = 0
             var totBroca = 0
             for(var acc in cbroca){
-                totBroca += cbroca[acc] ? cbroca[acc] : 0
+                totBroca += typeof cbroca[acc] == "number" ? cbroca[acc] : 0
             }
+            const oldEMA = stats.broca_daily_ema
+            const oldDailyTrend = stats.broca_daily_trend
+            stats.broca_daily_ema = parseInt((totBroca - oldEMA) * 0.1 + oldEMA)
+            stats.broca_daily_trend = parseInt(stats.broca_daily_ema - oldEMA)
+            stats.utilization = parseInt((totBroca * 10000) / (spk.t * 51408) / stats.vals_target) // 51408 assumes 1/2 long tail rewards, 95.2% of checks accepted, and staking reawrds are equlized
+            if(!stats.target_utilization)stats.target_utilization == stats.utilization //ramp up to target utilization
+            else if (stats.target_utilization < 5000)stats.target_utilization += 10
+            else if (stats.target_utilization > 5000)stats.target_utilization = 5000
+            const diff = stats.utilization - stats.target_utilization
+            if (diff > 500) { //utilization
+                stats.spk_clawback = 0
+                stats.spk_interest_rate = 5140 * (240 - parseInt(diff-500 / 90)) // Growing SPK Size comiserate with network utilization.
+                if(stats.spk_interest_rate < 5140)stats.spk_interest_rate = 5140
+            } else if(diff > -500){
+                stats.spk_interest_rate = 51408 * 24 // Assumes Storage Size will double in 24 months.
+                stats.spk_clawback = 0
+            } else {
+                stats.spk_interest_rate = totBroca + 1 // off
+                stats.spk_clawback= parseInt(diff / -10) // .5% clawback minimum 5% maximum
+            }
+            var newSPK = parseInt(totBroca / stats.spk_interest_rate)
+            spk.t += newSPK
+            spk.u += newSPK
             const BrocaPerSpk = spk.u > totBroca ? parseInt(spk.u / totBroca) : parseInt(totBroca / spk.u)
             const SpkBig = spk.u > totBroca
             const rewardBig = bals.rb > totBroca

@@ -51,6 +51,7 @@ var PoA = {
 
             */
             for(var j = 2; j < b.report.v[i].length; j ++){
+              console.log({j})
               if(j < contracts[i].p + 2)cBroca[b.report.v[i][j][0]] = cBroca[b.report.v[i][j][0]] ? 
                 cBroca[b.report.v[i][j][0]] + parseInt((reward * contracts[i].p) / (contracts[i].p > b.report.v[i].length - 2 ? b.report.v[i].length - 2 : contracts[i].p)):
                 parseInt((reward * contracts[i].p) / (contracts[i].p > b.report.v[i].length - 2 ? b.report.v[i].length - 2 : contracts[i].p))
@@ -127,6 +128,7 @@ var PoA = {
                                           Elapsed: 0
                                         }
                                         k.push([dfKeys[j], toVerify[dfKeys[j]].n[node]])
+                                        console.log('toVerify',toVerify[dfKeys[j]].n[node])
                                         promises.push(getPathObj(['service', 'IPFS', toVerify[dfKeys[j]].n[node]]))
                                     }
                                     this.Pending[block % 200] = toVerify
@@ -221,6 +223,7 @@ function PA (Name, CID, peerid, SALT, bn){
   socket.on('connect', (connection) => {
     setTimeout(() => {
       connection.close()
+      console.log("Timeout:", CID)}, 240000)
     connection.send(JSON.stringify({ Name, CID, peerid, SALT }));
     connection.on('message', (event) => {
       const data = event.utf8Data ? JSON.parse(event.utf8Data) : {}
@@ -245,7 +248,8 @@ function PA (Name, CID, peerid, SALT, bn){
           if (config.mode == 'verbose') console.log('Validating Proof', { data })
       } else if (data.Status === "Valid") {
           //if (config.mode == 'verbose') 
-          if (PoA.Pending[`${bn % 200}`][CID] && PoA.Pending[`${bn % 200}`]?.[CID]?.npid[Name] && !PoA.Pending[`${bn % 200}`][CID].npid[Name].Message )PoA.Pending[`${bn % 200}`][CID].npid[Name] = data
+            console.log('Proof Validated', { data })
+          if (PoA.Pending[`${bn % 200}`][CID] && PoA.Pending[`${bn % 200}`][CID]?.npid?.[Name] &&!PoA.Pending[`${bn % 200}`][CID].npid[Name].Message )PoA.Pending[`${bn % 200}`][CID].npid[Name] = data
           connection.close()
       } else if (data.Status === "Proof Invalid") {
           if (config.mode == 'verbose') console.log('Proof Invalid', { data })

@@ -123,6 +123,7 @@ var PoA = {
                                     toVerify[dfKeys[j]].v = 0
                                     toVerify[dfKeys[j]].npid = {}
                                     for (var node in toVerify[dfKeys[j]].n) {
+                                        console.log('toVerify',toVerify[dfKeys[j]].n[node])
                                         toVerify[dfKeys[j]].npid[toVerify[dfKeys[j]].n[node]] = {
                                           Message: 0,
                                           Elapsed: 0
@@ -132,6 +133,7 @@ var PoA = {
                                         promises.push(getPathObj(['service', 'IPFS', toVerify[dfKeys[j]].n[node]]))
                                     }
                                     this.Pending[block % 200] = toVerify
+                                    console.log(this.Pending[block % 200])
                                 }
                             }
                         }

@@ -373,10 +373,10 @@ function dao(num) {
             }
             const oldEMA = stats.broca_daily_ema
             const oldDailyTrend = stats.broca_daily_trend
-            stats.broca_daily_ema = parseInt((totBroca - oldEMA) * 0.1 + oldEMA)
-            stats.broca_daily_trend = parseInt(stats.broca_daily_ema - oldEMA)
+            stats.broca_daily_ema = parseInt((totBroca - oldEMA) * 0.1 + oldEMA) 
+            stats.broca_daily_trend = parseInt(stats.broca_daily_ema - oldEMA) // use this number to increase or decrease the max broca size
             stats.utilization = parseInt((totBroca * 10000) / (spk.t * 51408) / stats.vals_target) // 51408 assumes 1/2 long tail rewards, 95.2% of checks accepted, and staking reawrds are equlized
-            if(!stats.target_utilization)stats.target_utilization == stats.utilization //ramp up to target utilization
+            if(!stats.target_utilization)stats.target_utilization == stats.utilization * 2 //ramp up to target utilization
             else if (stats.target_utilization < 5000)stats.target_utilization += 10
             else if (stats.target_utilization > 5000)stats.target_utilization = 5000
             const diff = stats.utilization - stats.target_utilization

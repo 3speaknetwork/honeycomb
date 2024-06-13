@@ -251,6 +251,7 @@ function PA (Name, CID, peerid, SALT, bn){
       } else if (data.Status === "Valid") {
             console.log('Proof Validated', { data }, CID, Name, bn)
           if (PoA.Pending[`${bn % 200}`][CID] && PoA.Pending[`${bn % 200}`][CID]?.npid?.[Name] &&!PoA.Pending[`${bn % 200}`][CID].npid[Name].Message )PoA.Pending[`${bn % 200}`][CID].npid[Name] = data
+          console.log(PoA.Pending[`${bn % 200}`][CID].npid[Name])
           connection.close()
       } else if (data.Status === "Invalid") {
           if (config.mode == 'verbose') console.log('Proof Invalid', { data })

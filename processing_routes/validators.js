@@ -123,7 +123,6 @@ var PoA = {
                                     toVerify[dfKeys[j]].v = 0
                                     toVerify[dfKeys[j]].npid = {}
                                     for (var node in toVerify[dfKeys[j]].n) {
-                                        console.log('toVerify',toVerify[dfKeys[j]].n[node])
                                         toVerify[dfKeys[j]].npid[toVerify[dfKeys[j]].n[node]] = {
                                           Message: 0,
                                           Elapsed: 0
@@ -133,7 +132,6 @@ var PoA = {
                                         promises.push(getPathObj(['service', 'IPFS', toVerify[dfKeys[j]].n[node]]))
                                     }
                                     this.Pending[block % 200] = toVerify
-                                    console.log(this.Pending[block % 200])
                                 }
                             }
                         }
@@ -141,6 +139,7 @@ var PoA = {
                           for (var i = 0; i < peerIDs.length; i++) {
                               if(k[i]){
                                 this.Pending[`${block % 200}`][k[i][0]] = {}
+                                console.log(this.Pending[`${block % 200}`])
                               } else {
                                 if (config.mode == 'verbose') console.log(k, i, peerIDs)
                                 break

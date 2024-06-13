@@ -238,8 +238,10 @@ function PA (Name, CID, peerid, SALT, bn){
       } else if (data.Status === 'Connection Error') {
         connection.close()
           if (config.mode == 'verbose') console.log('Error: Connection Error')
+      } else if (data.Status === 'ProofReceived') {
+          if (config.mode == 'verbose') console.log('ProofReceived', { data })
       } else if (data.Status === 'Waiting Proof') {
-          if (config.mode == 'verbose') console.log('Waiting Proof', { data })
+        if (config.mode == 'verbose') console.log('Waiting Proof', { data })
       } else if (data.Status === "Validating") {
           if (config.mode == 'verbose') console.log('Validating', { data })
       } else if (data.Status === "Validated") {
@@ -250,7 +252,7 @@ function PA (Name, CID, peerid, SALT, bn){
             console.log('Proof Validated', { data }, CID, Name, bn)
           if (PoA.Pending[`${bn % 200}`][CID] && PoA.Pending[`${bn % 200}`][CID]?.npid?.[Name] &&!PoA.Pending[`${bn % 200}`][CID].npid[Name].Message )PoA.Pending[`${bn % 200}`][CID].npid[Name] = data
           connection.close()
-      } else if (data.Status === "Proof Invalid") {
+      } else if (data.Status === "Invalid") {
           if (config.mode == 'verbose') console.log('Proof Invalid', { data })
           connection.close()
       } else {

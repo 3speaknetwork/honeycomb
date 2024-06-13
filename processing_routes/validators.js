@@ -21,7 +21,7 @@ var PoA = {
     for(var i = 0; i < b.report.v.length; i++){
       const [gte, lte] = this.getRange(rand[b.report.v[i][1]], b.self, val, stats)
       const rev = b.report.v[i][0].split("").reverse().join("")
-      console.log('lottery:', gte, rev.substr(0,9), lte)
+      if (config.mode == 'verbose') console.log('lottery:', gte, rev.substr(0,9), lte)
       if(Base58.toNumber(rev.substr(0,gte.length)) >= Base58.toNumber(gte) && Base58.toNumber(rev.substr(0,lte.length)) <= Base58.toNumber(lte)){
         promises.push(getPathObj(['IPFS', rev]))
       } else {
@@ -39,7 +39,7 @@ var PoA = {
             var reward = 0
             try {
               reward = parseInt((contracts[i].p * contracts[i].r * contracts[i].df[b.report.v[i][0]]) / (contracts[i].u * 3))
-              console.log({contract: contracts[i], reward})
+              if (config.mode == 'verbose') console.log({contract: contracts[i], reward})
               cBroca[b.self] = cBroca[b.self] ? cBroca[b.self] + reward : reward //validator reward
             } catch (e) {
               console.log(e)
@@ -51,7 +51,7 @@ var PoA = {
 
             */
             for(var j = 2; j < b.report.v[i].length; j ++){
-              console.log({j})
+              if (config.mode == 'verbose') console.log({j})
               if(j < contracts[i].p + 2)cBroca[b.report.v[i][j][0]] = cBroca[b.report.v[i][j][0]] ? 
                 cBroca[b.report.v[i][j][0]] + parseInt((reward * contracts[i].p) / (contracts[i].p > b.report.v[i].length - 2 ? b.report.v[i].length - 2 : contracts[i].p)):
                 parseInt((reward * contracts[i].p) / (contracts[i].p > b.report.v[i].length - 2 ? b.report.v[i].length - 2 : contracts[i].p))
@@ -128,7 +128,7 @@ var PoA = {
                                           Elapsed: 0
                                         }
                                         k.push([dfKeys[j], toVerify[dfKeys[j]].n[node]])
-                                        console.log('toVerify',toVerify[dfKeys[j]].n[node])
+                                        if (config.mode == 'verbose') console.log('toVerify',toVerify[dfKeys[j]].n[node])
                                         promises.push(getPathObj(['service', 'IPFS', toVerify[dfKeys[j]].n[node]]))
                                     }
                                     this.Pending[block % 200] = toVerify
@@ -140,7 +140,7 @@ var PoA = {
                               if(k[i]){
                                 this.Pending[`${block % 200}`][k[i][0]] = {}
                               } else {
-                                console.log(k, i, peerIDs)
+                                if (config.mode == 'verbose') console.log(k, i, peerIDs)
                                 break
                               }
                               k[i].push(peerIDs[i])
@@ -218,7 +218,7 @@ function PA (Name, CID, peerid, SALT, bn){
     restOfPeerIDs = peerid.split(',').slice(1).join(',')
     PA (Name, CID, restOfPeerIDs, SALT, bn)
   }
-  console.log("PA: ", Name, CID, peerid, SALT, bn)
+  if (config.mode == 'verbose') console.log("PA: ", Name, CID, peerid, SALT, bn)
   var socket = new WebSocketClient();
   socket.on('connect', (connection) => {
     setTimeout(() => {
@@ -248,7 +248,7 @@ function PA (Name, CID, peerid, SALT, bn){
           if (config.mode == 'verbose') console.log('Validating Proof', { data })
       } else if (data.Status === "Valid") {
           //if (config.mode == 'verbose') 
-            console.log('Proof Validated', { data })
+            if (config.mode == 'verbose') console.log('Proof Validated', { data })
           if (PoA.Pending[`${bn % 200}`][CID] && PoA.Pending[`${bn % 200}`][CID]?.npid?.[Name] &&!PoA.Pending[`${bn % 200}`][CID].npid[Name].Message )PoA.Pending[`${bn % 200}`][CID].npid[Name] = data
           connection.close()
       } else if (data.Status === "Proof Invalid") {

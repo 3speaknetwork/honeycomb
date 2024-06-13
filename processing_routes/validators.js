@@ -247,8 +247,7 @@ function PA (Name, CID, peerid, SALT, bn){
       } else if (data.Status === "Validating Proof") {
           if (config.mode == 'verbose') console.log('Validating Proof', { data })
       } else if (data.Status === "Valid") {
-          //if (config.mode == 'verbose') 
-            if (config.mode == 'verbose') console.log('Proof Validated', { data })
+            console.log('Proof Validated', { data }, CID, Name, bn)
           if (PoA.Pending[`${bn % 200}`][CID] && PoA.Pending[`${bn % 200}`][CID]?.npid?.[Name] &&!PoA.Pending[`${bn % 200}`][CID].npid[Name].Message )PoA.Pending[`${bn % 200}`][CID].npid[Name] = data
           connection.close()
       } else if (data.Status === "Proof Invalid") {

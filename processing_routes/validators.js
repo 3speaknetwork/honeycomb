@@ -138,8 +138,8 @@ var PoA = {
                         Promise.all(promises).then(peerIDs => {
                           for (var i = 0; i < peerIDs.length; i++) {
                               if(k[i]){
-                                this.Pending[`${block % 200}`][k[i][0]] = {}
-                                console.log(this.Pending[`${block % 200}`])
+                                //this.Pending[`${block % 200}`][k[i][0]] = {}
+                                //console.log(this.Pending[`${block % 200}`])
                               } else {
                                 if (config.mode == 'verbose') console.log(k, i, peerIDs)
                                 break

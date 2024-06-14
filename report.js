@@ -17,9 +17,8 @@ function report(plas, con, poa) {
                         nodes = Object.keys(poa[`${i + offset}`][CID].npid)
                     } catch (e){continue}
                     if(nodes.length){
-                        for(var j = 0; j < nodes.length; j++){    
-                            console.log(poa[`${i + offset}`][CID].npid)
-                            if(poa[`${i + offset}`][CID].npid[nodes[j]] &&  poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed)formated.push([nodes[j], poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed, poa[`${i + offset}`][CID].npid[nodes[j]].Message])
+                        for(var j = 0; j < nodes.length; j++){
+                            if(poa[`${i + offset}`][CID].npid[nodes[j]] &&  poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed)formated.push([nodes[j], poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed])
                         }
                         if(formated.length > 2)val.push(formated)
                     }

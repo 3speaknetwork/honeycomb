@@ -550,7 +550,7 @@ exports.store = (json, from, active, pc) => {
           var msg = `@${from} Stored|`
           for (var i = 0; i < contracts.length; i++) {
             const contract = contracts[i]
-            if (contract.nt && Object.values(contract.nt).indexOf(from) == -1){
+            if (contract.nt && Object.values(contract.n).indexOf(from) == -1){
               const nt = Base64.fromNumber(Base64.toNumber(contract.nt) + 1)
               contract.n[nt] = from
               contract.nt = nt

@@ -51,7 +51,7 @@ exports.forceCancel = forceCancel
 
 const broca_calc = (last = '0,0', pow, stats, bn, add = 0) => {
     const last_calc = require('./helpers').Base64.toNumber(last.split(',')[1])
-    const accured = parseInt((parseFloat(stats.broca_refill) * (bn - last_calc))/(pow * 1000))
+    const accured = parseInt((parseFloat(stats.broca_refill) * (bn - last_calc))/(pow * (stats.broca_daily_trend > 1000 ? stats.broca_daily_trend : 1000))) //revisit 
     var total = parseInt(last.split(',')[0]) + accured + add
     if(total > (pow * 1000))total = (pow * 1000)
     return `${total},${require("./helpers").Base64.fromNumber(bn)}`

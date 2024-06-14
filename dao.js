@@ -382,9 +382,9 @@ function dao(num) {
             const diff = stats.utilization - stats.target_utilization
             if (diff > 500) { //utilization
                 stats.spk_clawback = 0
-                stats.spk_interest_rate = 5140 * (240 - parseInt(diff-500 / 90)) // Growing SPK Size comiserate with network utilization.
+                stats.spk_interest_rate = 5140 * (240 - parseInt(diff-500 / 20)) // Growing SPK Size comiserate with network utilization.
                 if(stats.spk_interest_rate < 5140)stats.spk_interest_rate = 5140
-            } else if(diff > -500){
+            } else if(diff > -500 || stats.broca_daily_trend > - 51408){
                 stats.spk_interest_rate = 51408 * 24 // Assumes Storage Size will double in 24 months.
                 stats.spk_clawback = 0
             } else {

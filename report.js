@@ -18,7 +18,7 @@ function report(plas, con, poa) {
                     } catch (e){continue}
                     if(nodes.length){
                         for(var j = 0; j < nodes.length; j++){
-                            if(poa[`${i + offset}`][CID].npid[nodes[j]] &&  poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed)formated.push([nodes[j], poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed])
+                            if(poa[`${i + offset}`][CID].npid[nodes[j]] &&  poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed)formated.push([nodes[j], msIzer(poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed)])
                         }
                         if(formated.length > 2)val.push(formated)
                     }
@@ -64,6 +64,36 @@ function report(plas, con, poa) {
     })
 }
 exports.report = report;
+
+function msIzer (timer){
+    var ms = 0
+    // regex to match m but not ms
+    var minuteD = timer.split(/m(?![s])/g)
+    if (minuteD.length > 1){
+        var minutes = minuteD[0]
+        timer = minuteD[1]
+        const dotSplit = minutes.split(".")
+        if(dotSplit.length > 1){
+            ms += parseInt(dotSplit[0]) * 60000
+            ms = parseInt(dotSplit[1]*60) * 1000
+        } else {
+            ms += parseInt(dotSplit[0]) * 60000
+        }
+    }
+    // regex to match s but not ms
+    var secondD = timer.split(/(?<![m])s/g)
+    if (secondD.length > 1){
+        var seconds = secondD[0]
+        timer = secondD[1]
+        ms += parseInt(parseFloat(seconds) * 1000)
+    }
+    // regex to match ms
+    var millisecondD = timer.split(/ms/g)
+    if (millisecondD.length > 1){
+        ms += parseInt(millisecondD[0])
+    }
+    return ms
+}
 
 function sig_submit(sign) {
     return new Promise((resolve, reject) => {

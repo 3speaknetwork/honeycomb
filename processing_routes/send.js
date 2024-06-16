@@ -1,7 +1,7 @@
 const config = require('./../config')
 const { store } = require("./../index");
 const { getPathNum, getPathObj } = require("./../getPathObj");
-const { reward_spk } = require("../lil_ops");
+//const { reward_spk } = require("../lil_ops");
 const { postToDiscord } = require('./../discord');
 const fetch = require('node-fetch');
 
@@ -30,10 +30,10 @@ exports.send = (json, from, active, pc) => {
 }
 
 exports.spk_send = (json, from, active, pc) => {
-    let Pinterest = reward_spk(from, json.block_num),
-        Pinterest2 = reward_spk(json.to, json.block_num);
-    Promise.all([Pinterest, Pinterest2])
-        .then(interest => {
+    // let Pinterest = reward_spk(from, json.block_num),
+    //     Pinterest2 = reward_spk(json.to, json.block_num);
+    // Promise.all([Pinterest, Pinterest2])
+    //     .then(interest => {
             let fbalp = getPathNum(["spk", from]),
                 tbp = getPathNum(["spk", json.to]); //to balance promise
             Promise.all([fbalp, tbp])
@@ -84,14 +84,14 @@ exports.spk_send = (json, from, active, pc) => {
                 .catch((e) => {
                     console.log(e);
                 });
-        })
+        // })
 };
 
 exports.shares_claim = (json, from, active, pc) => {
     let fbalp = getPathNum(['cbalances', from]),
-        tbp = getPathNum(['balances', from]),
-        Pinterest = reward_spk(from, json.block_num)
-    Promise.all([fbalp, tbp, Pinterest])
+        tbp = getPathNum(['balances', from])
+        // Pinterest = reward_spk(from, json.block_num)
+    Promise.all([fbalp, tbp])
         .then(bals => {
             let fbal = bals[0],
                 tbal = bals[1],

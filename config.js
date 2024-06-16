@@ -70,24 +70,24 @@ const clients = ENV.clients ? ENV.clients.split(" ") : [
 
 //!!!!!!! -- THESE ARE COMMUNITY CONSTANTS -- !!!!!!!!!//
 //TOKEN CONFIGS -- ALL COMMUNITY RUNNERS NEED THESE SAME VALUES
-const starting_block = 62313601; //from what block does your token start
-const prefix = 'spkcc_' //Community token name for Custom Json IDs
+const starting_block = 86345601; //from what block does your token start
+const prefix = 'spkccT_' //Community token name for Custom Json IDs
 const TOKEN = 'LARYNX' //Token name
 const precision = 3 //precision of token
 const tag = 'spk' //the fe.com/<tag>/@<leader>/<permlink>
 const jsonTokenName = 'larynx' //what customJSON in Escrows and sends is looking for
-const leader = 'regardspk' //Default account to pull state from, will post token
+const leader = 'spk-test' //Default account to pull state from, will post token
 const ben = '' //Account where comment benifits trigger token action
 const delegation = '' //account people can delegate to for rewards
 const delegationWeight = 1000 //when to trigger community rewards with bens
-const msaccount = 'spk-cc' //account controlled by community leaders
-const msPubMemo = 'STM5GNM3jpjWh7Msts5Z37eM9UPfGwTMU7Ksats3RdKeRaP5SveR9'
-const msPriMemo = '5KDZ9fzihXJbiLqUCMU2Z2xU8VKb9hCggyRPZP37aprD2kVKiuL'
+const msaccount = 'spk-cc-test' //account controlled by community leaders
+const msPubMemo = 'STM8hszG2prkmSBsPpgQ4ZipdGq5MMK7zoJDXD7cV2FL83HXascWk'
+const msPriMemo = '5KGUzqXqHwhQRDg5m2UH6CGCEuKHgSuNzQnvVGv1q2xeovuV5cN'
 const msmeta = ''
-const mainAPI = 'spktoken.dlux.io' //leaders API probably
+const mainAPI = 'spktest.dlux.io' //leaders API probably
 const mainRender = '' //data and render server
-const mainFE = '3speak.tv' //frontend for content
-const mainIPFS = 'ipfs.3speak.tv' //IPFS service
+const mainFE = 'dlux.io' //frontend for content
+const mainIPFS = 'ipfs.dlux.io' //IPFS service
 const mainICO = '' //Account collecting ICO HIVE
 const footer = ''//`\n[Find us on Discord](https://discord.gg/Beeb38j)`
 const hive_service_fee = 100 //HIVE service fee for transactions in Hive/HBD in centipercents (1% = 100)
@@ -116,6 +116,7 @@ const votable = [
   "spk_liq",
   "vals_target",
   "nodeRate", // validator share of new larynx
+  "staking_rewards", // percent of inflation to delegators
 ]
 const features = {
     pob: false, //proof of brain

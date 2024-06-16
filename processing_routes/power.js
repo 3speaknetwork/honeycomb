@@ -1,13 +1,13 @@
 const config = require("./../config");
 const { store } = require("../index");
 const { getPathObj, getPathNum } = require("../getPathObj");
-const { chronAssign, reward_spk, broca_calc } = require("../lil_ops");
+const { chronAssign, broca_calc } = require("../lil_ops");
 const { Base64, Validator } = require("../helpers")
 const { postToDiscord } = require('./../discord');
 const { stats } = require("../state");
 
 exports.power_up = (json, from, active, pc) => {
-  reward_spk(from, json.block_num).then((interest) => {
+  //reward_spk(from, json.block_num).then((interest) => {
     var amount = parseInt(json.amount),
       lpp = getPathNum(["balances", from]),
       tpowp = getPathNum(["pow", "t"]),
@@ -59,7 +59,7 @@ exports.power_up = (json, from, active, pc) => {
       .catch((e) => {
         console.log(e);
       });
-  });
+  //});
 };
 
 exports.power_grant = (json, from, active, pc) => {
@@ -74,9 +74,9 @@ exports.power_grant = (json, from, active, pc) => {
     Pdown_from = getPathObj(["down", from]),
     Pup_to = getPathObj(["up", to]),
     Pdown_to = getPathObj(["down", to]),
-    Pgov = getPathNum(["gov", to]);
-  (Pinterest = reward_spk(from, json.block_num)), //interest calc before balance changes.
-    (Pinterest2 = reward_spk(json.to, json.block_num));
+    Pgov = getPathNum(["services", to, "s", "c"]);
+  //(Pinterest = reward_spk(from, json.block_num)), //interest calc before balance changes.
+    //(Pinterest2 = reward_spk(json.to, json.block_num));
   Promise.all([
     Ppower,
     Pgranted_to_from,
@@ -87,9 +87,9 @@ exports.power_grant = (json, from, active, pc) => {
     Pup_to,
     Pdown_from,
     Pdown_to,
-    Pgov,
-    Pinterest,
-    Pinterest2,
+    Pgov
+    // Pinterest,
+    // Pinterest2,
   ])
     .then((mem) => {
       let from_power = mem[0],
@@ -123,16 +123,27 @@ exports.power_grant = (json, from, active, pc) => {
             path: ["granting", from, "t"],
             data: granting_from_total + more,
           });
-          ops.push({
-            type: "put",
-            path: ["granting", from, to],
-            data: granting_to_from + more,
-          });
-          ops.push({
-            type: "put",
-            path: ["granted", to, from],
-            data: granted_to_from + more,
-          });
+          if(amount > 0){
+            ops.push({
+              type: "put",
+              path: ["granting", from, to],
+              data: granting_to_from + more,
+            });
+            ops.push({
+              type: "put",
+              path: ["granted", to, from],
+              data: granted_to_from + more,
+            });
+          } else {
+            ops.push({
+              type: "del",
+              path: ["granting", from, to]
+            });
+            ops.push({
+              type: "del",
+              path: ["granted", to, from]
+            });
+          }
           ops.push({
             type: "put",
             path: ["granted", to, "t"],
@@ -187,6 +198,7 @@ exports.power_grant = (json, from, active, pc) => {
           if (down_to.max) {
             down_to.max -= less;
           }
+          if(less)
           ops.push({
             type: "put",
             path: ["granting", from, "t"],
@@ -335,7 +347,7 @@ exports.power_down = (json, from, active, pc) => {
 
 
 exports.spk_up = (json, from, active, pc) => {
-  reward_spk(from, json.block_num).then((interest) => {
+  //reward_spk(from, json.block_num).then((interest) => {
     var amount = parseInt(json.amount),
       lpp = getPathNum(["spk", from]),
       tpowp = getPathNum(["spow", "t"]),
@@ -415,7 +427,7 @@ exports.spk_up = (json, from, active, pc) => {
       .catch((e) => {
         console.log(e);
       });
-  });
+  //});
 };
 
 

@@ -11,14 +11,15 @@ exports.report = (json, from, active, pc) => {
     var pStats = getPathObj(['stats'])
     let pVal = getPathObj(['val'])
     let PcBroca = getPathObj(['cbroca'])
-    Promise.all([pReport, pRand, pStats, pVal, PcBroca]).then(mem => {
+    let PvBroca = getPathObj(['vbroca'])
+    Promise.all([pReport, pRand, pStats, pVal, PcBroca, PvBroca]).then(mem => {
         var b = mem[0], rand = mem[1], stats = mem[2], val = mem[3], cBroca = mem[4]
         if (from == b.self && active) {
             b.report = json
             delete b.report.timestamp
             console.log(b.report.v , from)
             if(b.report.v){
-                PoA.Check(b, rand, stats, val, cBroca, pc)
+                PoA.Check(b, rand, stats, val, cBroca, mem[5], pc)
             } else {
                 var ops = [
                     { type: 'put', path: ['markets', 'node', from], data: b }

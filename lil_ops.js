@@ -135,7 +135,7 @@ const reward_spk = (acc, bn) => {
     })
 }
 
-exports.reward_spk = reward_spk
+//exports.reward_spk = reward_spk
 
 const simpleInterest = (p, t, r) => {
   const amount = p * (1 + r / 365);

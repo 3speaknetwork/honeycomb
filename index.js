@@ -1,5 +1,5 @@
 const config = require("./config");
-const VERSION = "v1.2.0-t15";
+const VERSION = "v1.2.0-t16";
 exports.VERSION = VERSION;
 exports.exit = exit;
 exports.processor = processor;
@@ -1096,6 +1096,7 @@ function startWith(hash, second) {
                       cleanState.stats.broca_daily_trend = 10000 // 100% of ema total
                       cleanState.stats.target_utilization = 0 // 50% of SPK
                       cleanState.stats.utilization = 1000 // 10% of spk utilized
+                      cleanState.stats.staking_rewards = 2000 // 20% of spk mined goes to delegators
                       cleanState.template = {
                         "0": {
                           i: "0",

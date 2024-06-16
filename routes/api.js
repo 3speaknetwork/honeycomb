@@ -3116,7 +3116,7 @@ exports.user_spk = (req, res, next) => {
                 res.send(
                   JSON.stringify(
                     {
-                      balance: v[11] + reward_spk(RAM.head, v[12], v[5], v[1], v[0], v[2], v[8]),
+                      balance: v[11], // + reward_spk(RAM.head, v[12], v[5], v[1], v[0], v[2], v[8]),
                       claim: v[9],
                       poweredUp: v[18],
                       granted: v[2],

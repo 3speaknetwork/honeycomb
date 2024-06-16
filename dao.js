@@ -41,15 +41,19 @@ function dao(num) {
             Pfeed = getPathObj(['feed']),
             Ppaid = getPathObj(['paid']),
             Pvals = getPathObj(['val']),
-            Prnfts = getPathObj(['rnfts']),
+            Prnfts = getPathObj(['granting']),
             PcBroca = getPathObj(['cbroca']),
-            PSpk = getPathObj(['spk'])
-            Pdistro = Distro()
-        Promise.all([Pnews, Pbals, Prunners, Pnodes, Pstats, Pdelegations, Pico, Pdex, Pbr, Ppbal, Pnomen, Pposts, Pfeed, Ppaid, Prnfts, Pdistro, Pcbals, Pgov, Pvals, PcBroca, PSpk]).then(function(v) {
+            PvBroca = getPathObj(['vbroca']),
+            PSpk = getPathObj(['spk']),
+            Pgranted = getPathObj(['granted']),
+            Pservices = getPathObj(['services'])
+        Promise.all([Pnews, Pbals, Prunners, Pnodes, Pstats, Pdelegations, Pico, Pdex, Pbr, Ppbal, Pnomen, Pposts, Pfeed, Ppaid, Pgranting, Pgranted, Pcbals, Pgov, Pvals, PcBroca, PSpk, PvBroca, Pservices]).then(function(v) {
             daops.push({ type: 'del', path: ['postQueue'] });
             daops.push({ type: 'del', path: ['br'] });
             daops.push({ type: 'del', path: ['rolling'] });
             daops.push({ type: 'del', path: ['auction'] });
+            daops.push({ type: 'del', path: ['cBroca'] });
+            daops.push({ type: 'del', path: ['vBroca'] });
             // daops.push({ type: 'del', path: ['markets', 'node'] })
             news = v[0] + '*****\n';
             const header = post + news;
@@ -67,29 +71,23 @@ function dao(num) {
                 cpost = v[11],
                 feedCleaner = v[12],
                 paidCleaner = v[13],
-                rnftsCleaner = v[14];
-                dist = v[15],
+                granting = v[14];
+                granted = v[15],
                 gov = v[17],
                 vals = v[18],
                 cbroca = v[19],
-                spk = v[20]
-            for(var i = 0; i < dist.length;i++){
-                if(dist[i][0].split('div:')[1]){
-                    addMT(['div', dist[i][0].split('div:')[1], 'b'], dist[i][1] )
-                } else {
-                    cbals[dist[i][0]] ? cbals[dist[i][0]] += dist[i][1] : cbals[dist[i][0]] = dist[i][1]
-                }
-            }
+                spk = v[20],
+                vbroca = v[21],
+                services = v[22]
+            // for(var i = 0; i < dist.length;i++){
+            //     if(dist[i][0].split('div:')[1]){
+            //         addMT(['div', dist[i][0].split('div:')[1], 'b'], dist[i][1] )
+            //     } else {
+            //         cbals[dist[i][0]] ? cbals[dist[i][0]] += dist[i][1] : cbals[dist[i][0]] = dist[i][1]
+            //     }
+            // }
             feedKeys = Object.keys(feedCleaner);
             paidKeys = Object.keys(paidCleaner);
-            for(var set in rnftsCleaner){
-                rnftKeys = Object.keys(rnftsCleaner[set]);
-                for (var rnfti = 0; rnfti < rnftKeys.length; rnfti++) {
-                    if (rnftsCleaner[set][rnftKeys[rnfti]] == 0) {
-                        daops.push({ type: 'del', path: ['rnfts', set, rnftKeys[rnfti]] });
-                    }
-                }
-            }
             for (feedi = 0; feedi < feedKeys.length; feedi++) {
                 if (feedKeys[feedi].split(':')[0] < num - 30240) {
                     daops.push({ type: 'del', path: ['feed', feedKeys[feedi]] });
@@ -368,24 +366,29 @@ function dao(num) {
             bals.rb += bals.ra
             bals.ra = 0
             var totBroca = 0
+            var totC = 0
             for(var acc in cbroca){
                 totBroca += typeof cbroca[acc] == "number" ? cbroca[acc] : 0
+                totC += typeof cbals[acc] == "number" ? cbals[acc] : 0
+            }
+            for(var acc in vbroca){
+                totBroca += typeof vbroca[acc] == "number" ? vbroca[acc] : 0
             }
             const oldEMA = stats.broca_daily_ema
             const oldDailyTrend = stats.broca_daily_trend
             stats.broca_daily_ema = parseInt((totBroca - oldEMA) * 0.1 + oldEMA) 
             stats.broca_daily_trend = parseInt(stats.broca_daily_ema - oldEMA) // use this number to increase or decrease the max broca size
-            stats.utilization = parseInt((totBroca * 10000) / (spk.t * 51408) / stats.vals_target) // 51408 assumes 1/2 long tail rewards, 95.2% of checks accepted, and staking reawrds are equlized
+            stats.utilization = parseInt((totBroca * 10000) / (spk.t * 100000) / stats.vals_target) // 51408 assumes 1/2 long tail rewards, 95.2% of checks accepted, and staking reawrds are equlized
             if(!stats.target_utilization)stats.target_utilization == stats.utilization * 2 //ramp up to target utilization
             else if (stats.target_utilization < 5000)stats.target_utilization += 10
             else if (stats.target_utilization > 5000)stats.target_utilization = 5000
             const diff = stats.utilization - stats.target_utilization
             if (diff > 500) { //utilization
                 stats.spk_clawback = 0
-                stats.spk_interest_rate = 5140 * (240 - parseInt(diff-500 / 20)) // Growing SPK Size comiserate with network utilization.
-                if(stats.spk_interest_rate < 5140)stats.spk_interest_rate = 5140
-            } else if(diff > -500 || stats.broca_daily_trend > - 51408){
-                stats.spk_interest_rate = 51408 * 24 // Assumes Storage Size will double in 24 months.
+                stats.spk_interest_rate = 50000 * (240 - parseInt(diff-500 / 20)) // Growing SPK Size comiserate with network utilization.
+                if(stats.spk_interest_rate < 50000)stats.spk_interest_rate = 50000
+            } else if(diff > -500 || stats.broca_daily_trend > - 100000){
+                stats.spk_interest_rate = 100000 * 24 // Assumes Storage Size will double in 24 months.
                 stats.spk_clawback = 0
             } else {
                 stats.spk_interest_rate = totBroca + 1 // off
@@ -393,24 +396,52 @@ function dao(num) {
             }
             var newSPK = parseInt(totBroca / stats.spk_interest_rate)
             spk.t += newSPK
-            spk.u += newSPK
-            const BrocaPerSpk = spk.u > totBroca ? parseInt(spk.u / totBroca) : parseInt(totBroca / spk.u)
-            const SpkBig = spk.u > totBroca
-            const rewardBig = bals.rb > totBroca
-            const brocaPerMil = bals.rb > totBroca ? parseInt(bals.rb / totBroca) : parseInt(totBroca / bals.rb)
-            for(var acc in cbroca){
-                const fromMint = rewardBig ? parseInt(cbroca[acc] * brocaPerMil) : parseInt(brocaPerMil / cbroca[acc])
-                const fromSPK = SpkBig ? parseInt(cbroca[acc] * BrocaPerSpk) : parseInt(BrocaPerSpk / cbroca[acc])
-                cbals[acc] = cbals[acc] ? 
-                    cbals[acc] + fromMint :
-                    fromMint
-                spk[acc] = spk[acc] ? 
-                    spk[acc] + fromSPK :
-                    fromSPK
-                bals.rb -= fromMint
-                spk.u -= fromSPK
-                cbroca[acc] -= rewardBig ? parseInt( fromMint / brocaPerMil) : parseInt(brocaPerMil / fromMint)
+            spk.u += newSPK //unissued
+            const StakingRewards = parseInt(spk.u * stats.staking_rewards / 10000)
+            var StakingDist = 0
+            spk.u -= StakingRewards
+            const StorageRewards = spk.u
+            var StorageDist = 0
+            var SpkShares = {}
+            spk.u -= StorageRewards
+            for (var acc in cbroca){
+                const share = parseInt(StorageRewards * cbroca[acc] / totBroca)
+                spk[acc] = spk[acc] ? spk[acc] + share : share
+                SpkShares[acc] = share
+                StorageDist += share
             }
+            for (var acc in vbroca){
+                const share = parseInt(StorageRewards * vbroca[acc] / totBroca)
+                spk[acc] = spk[acc] ? spk[acc] + share : share
+                StorageDist += share
+            }
+            spk.u = spk.u + StorageRewards - StorageDist
+            for( var acc in SpkShares){
+                const share = parseInt( StakingRewards * SpkShares[acc] / StorageDist) 
+                const theirShare = parseInt((services[acc].s.c * 5)/(granted[acc].t + (services[acc].s.c * 5)) * share)
+                const forDist = share - theirShare
+                spk[acc] += theirShare
+                var thisDist = theirShare
+                for (var acc2 in granted[acc]){
+                    spk[acc2] = spk[acc2] ? spk[acc2] + parseInt(forDist * granted[acc][acc2] / granted[acc].t) : parseInt(forDist * granted[acc][acc2] / granted[acc].t)
+                    thisDist -= parseInt(forDist * granted[acc][acc2] / granted[acc].t)
+                }
+                spk.u += forDist - thisDist
+            }
+            //const BrocaPerSpk = spk.u > totBroca ? parseInt(spk.u / totBroca) : parseInt(totBroca / spk.u)
+            //const SpkBig = spk.u > totBroca
+            // const rewardBig = bals.rb > totBroca
+            // const brocaPerMil = bals.rb > totBroca ? parseInt(bals.rb / totBroca) : parseInt(totBroca / bals.rb)
+            
+            // for(var acc in cbroca){
+            //     //const fromMint = rewardBig ? parseInt(cbroca[acc] * brocaPerMil) : parseInt(brocaPerMil / cbroca[acc])
+            //     const fromSPK = SpkBig ? parseInt(cbroca[acc] * BrocaPerSpk) : parseInt(BrocaPerSpk / cbroca[acc])
+            //     //cbals[acc] = cbals[acc] ? cbals[acc] + fromMint : fromMint
+            //     spk[acc] = spk[acc] ?  spk[acc] + fromSPK : fromSPK
+            //     //bals.rb -= fromMint
+            //     spk.u -= fromSPK
+            //     //cbroca[acc] -= rewardBig ? parseInt( fromMint / brocaPerMil) : parseInt(brocaPerMil / fromMint)
+            // }
             var q = 0,
                 r = bals.rc;
             for (var i in br) {

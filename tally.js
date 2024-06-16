@@ -601,7 +601,7 @@ function verify(trx, sig, at, active = true) {
                     tx.signatures = sg;
                 }
                 if (tx.signatures.length == t && tx.operations.length) {
-                    console.log('Attempting MS Broadcast...')
+                    console.log('Attempting MS Broadcast...', tx)
                     hiveClient.api.broadcastTransactionSynchronous(
                         tx,
                         function (err, result) {

@@ -1097,7 +1097,7 @@ exports.transfer = (json, pc) => {
       order.amount = parseInt(json.amount.amount);
       //console.log({order})
       if (order.type == "MARKET" || order.type == "LIMIT") {
-        if(order.tokem != 'SPK')order.token = 'LARYNX'
+        if(order.token != 'SPK')order.token = 'LARYNX'
         let pDEX = getPathObj([`dex${order.token == 'SPK' ? 's' : ''}`, order.pair]),
           pBal = getPathNum([order.token == 'SPK' ? 'spk' : 'balances', json.from]),
           pInv = getPathNum(["balances", "ri"]),
@@ -1388,7 +1388,7 @@ exports.transfer = (json, pc) => {
                     const msg = `@${json.from}| bought ALL ${parseFloat(
                       parseInt(purchase - left)
                     ).toFixed(3)} ${order.token == 'SPK' ? 'SPK' : 'LARYNX'} with ${parseFloat(
-                      parseInt(amount) / 1000
+                      parseInt(order.amount) / 1000
                     ).toFixed(3)} HIVE. And bid in the over-auction`;
                     ops.push(
                       {

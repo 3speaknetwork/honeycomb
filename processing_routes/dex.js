@@ -1125,11 +1125,18 @@ exports.transfer = (json, pc) => {
             if (price) item = dex.sellBook.split("_")[1].split(",")[0];
             else price = dex.tick;
             console.log("Matching...", { order, price, item });
+            console.log(
+              item,
+              order.pair == "hbd",
+              order.pair == "hive",
+              order.token != 'SPK' && price <= stats.icoPrice / 1000, config.features.ico,
+              order.type == "MARKET",
+              order.type == "LIMIT", order.rate >= price)
             if (
               item &&
               (order.pair == "hbd" ||
                 (order.pair == "hive" &&
-                  ((order.token != 'SPK' && price <= stats.icoPrice / 1000) || !config.features.ico))) &&
+                  (order.token != 'SPK' || price <= stats.icoPrice / 1000 || !config.features.ico))) &&
               (order.type == "MARKET" ||
                 (order.type == "LIMIT" && order.rate >= price))
             ) {

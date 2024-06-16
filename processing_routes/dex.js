@@ -1129,7 +1129,7 @@ exports.transfer = (json, pc) => {
               item &&
               (order.pair == "hbd" ||
                 (order.pair == "hive" &&
-                  ((order.token != 'SPK' && price <= stats.icoPrice / 1000) || !config.features.ico))) &&
+                  (order.token != 'SPK' && ( price <= stats.icoPrice / 1000 || !config.features.ico)))) &&
               (order.type == "MARKET" ||
                 (order.type == "LIMIT" && order.rate >= price))
             ) {
@@ -1394,7 +1394,7 @@ exports.transfer = (json, pc) => {
                       {
                         type: "put",
                         path: ["ico", `${json.block_num}`, json.from],
-                        data: parseInt((amount * left) / purchase),
+                        data: parseInt((order.amount * left) / purchase),
                       },
                       { type: "put", path: [order.token == 'SPK' ? 'spk' : 'balances', "ri"], data: 0 },
                       {

@@ -1192,7 +1192,7 @@ exports.transfer = (json, pc) => {
                   if (Object.keys(his).length)
                     ops.push({
                       type: "put",
-                      path: ["dex", order.pair, "his"],
+                      path: [order.token == 'SPK' ? 'dexs' : 'dex', order.pair, "his"],
                       data: his,
                     });
                   ops.push({
@@ -1202,7 +1202,7 @@ exports.transfer = (json, pc) => {
                   }); //send HIVE out via MS
                   ops.push({
                     type: "del",
-                    path: ["dex", order.pair, "sellOrders", `${price}:${item}`],
+                    path: [order.token == 'SPK' ? 'dexs' : 'dex', order.pair, "sellOrders", `${price}:${item}`],
                   }); //remove the order
                   ops.push({
                     type: "del",
@@ -1300,7 +1300,7 @@ exports.transfer = (json, pc) => {
                 });
                 ops.push({
                   type: "put",
-                  path: ["dex", order.pair, "his"],
+                  path: [order.token == 'SPK' ? 'dexs' : 'dex', order.pair, "his"],
                   data: his,
                 });
                 ops.push({

@@ -346,7 +346,7 @@ function startApp() {
   // processor.on("val_bundle", HR.val_bundle); //Place IPFS bundle on storage market
   // processor.on("val_report", HR.val_report); //Validator report
   // processor.on("val_check", HR.val_check); //Validator second check -> merge to val_report
-  if (!config.mirrorNet) processor.onOperation("account_update", HR.account_update);
+  processor.onOperation("account_update", HR.account_update);
   processor.onOperation("comment", HR.comment);
   processor.onOperation("comment_options", HR.comment_options);
   //processor.on("queueForDaily", HR.q4d);
@@ -382,7 +382,7 @@ function startApp() {
     processor.on(`sig_submit${config.mirrorNet ? "M" : ""}`, HR.sig_submit); //dlux is for putting executable programs into IPFS... this is for additional accounts to sign the code as non-malicious
     processor.on(`osig_submit${config.mirrorNet ? "M" : ""}`, HR.osig_submit);
   }
-  if (!config.mirrorNet && (config.features.dex || config.features.nft || config.features.ico)) {
+  if (config.features.dex || config.features.nft || config.features.ico) {
     processor.onOperation("transfer", HR.transfer);
   }
   if (config.features.nft) {

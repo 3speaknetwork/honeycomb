@@ -721,7 +721,7 @@ function startApp() {
                           });
                       })
                     );
-                  } else if (msa_keys.length > 80 && !config.mirrorNet) {
+                  } else if (msa_keys.length > 80 ) {
                     promises.push(
                       new Promise((res, rej) => {
                         sig_submit(consolidate(num, plasma, bh))
@@ -736,7 +736,7 @@ function startApp() {
                     );
                   }
                   for (var missed = 0; missed < mss.length; missed++) {
-                    if (mss[missed].split(":").length == 1 && !config.mirrorNet) {
+                    if (mss[missed].split(":").length == 1) {
                       missed_num = mss[missed];
                       promises.push(
                         new Promise((res, rej) => {

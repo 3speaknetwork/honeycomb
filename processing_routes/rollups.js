@@ -477,7 +477,7 @@ exports.extend = (json, from, active, pc) => {
 
         // (28800 * 30) // term
         // remaining_time = exp_block - json.block_num
-        const broca_per_term = parseInt((contract.u * contract.p) / (stats.channel_bytes * 3))
+        const broca_per_term = parseInt((contract.u * contract.p) / (stats.channel_bytes * 3)) || 1
         const blocks_additional = parseInt((json.broca / broca_per_term) * 28800 * 30)
         chronAssign(parseInt(exp_block + blocks_additional), {
           block: parseInt(exp_block + blocks_additional),

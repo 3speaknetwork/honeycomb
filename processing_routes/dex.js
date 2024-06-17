@@ -1,4 +1,4 @@
-const config = require("./../config");
+dexconst config = require("./../config");
 
 const { Base64, NFT, DEX } = require("./../helpers");
 const { store, GetNodeOps, spliceOp, plasma } = require("./../index");
@@ -323,12 +323,12 @@ exports.dex_sell = (json, from, active, pc) => {
           path: ["feed", `${json.block_num}:${json.transaction_id}`],
           data: msg,
         });
-        ops.push({ type: "put", path: ["balances", from], data: bal });
-        ops.push({ type: "put", path: ["dex", order.pair], data: dex });
+        ops.push({ type: "put", path: [order.token == 'SPK' ? 'spk' : "balances", from], data: bal });
+        ops.push({ type: "put", path: [order.token == 'SPK' ? 'dexs' : "dex", order.pair], data: dex });
         if (Object.keys(his).length)
           ops.push({
             type: "put",
-            path: ["dex", order.pair, "his"],
+            path: [order.token == 'SPK' ? 'dexs' : "dex", order.pair, "his"],
             data: his,
           });
         add("rn", fee).then((empty) => {
@@ -657,7 +657,8 @@ exports.transfer = (json, pc) => {
                 json.block_num,
                 `roy_${json.transaction_id}`,
                 `n:${set.n}`,
-                json.timestamp
+                json.timestamp,
+                config.TOKEN
               ).then((empty) => {
                 DEX.buyTokenFromDex(
                   fee,
@@ -665,7 +666,8 @@ exports.transfer = (json, pc) => {
                   json.block_num,
                   `fee_${json.transaction_id}`,
                   `rn`,
-                  json.timestamp
+                  json.timestamp,
+                  config.TOKEN
                 ).then((emp) => {
                   finish(set, json, listing, uid, item, Transfer, nft, pc);
                 });
@@ -677,7 +679,8 @@ exports.transfer = (json, pc) => {
                 json.block_num,
                 `fee_${json.transaction_id}`,
                 `rn`,
-                json.timestamp
+                json.timestamp,
+                config.TOKEN
               ).then((emp) => {
                 finish(set, json, listing, uid, item, Transfer, nft, pc);
               });
@@ -964,7 +967,8 @@ exports.transfer = (json, pc) => {
                 json.block_num,
                 `roy_${json.transaction_id}`,
                 `n:${set.n}`,
-                json.timestamp
+                json.timestamp,
+                config.TOKEN
               ).then((empty) => {
                 DEX.buyTokenFromDex(
                   fee,
@@ -972,7 +976,8 @@ exports.transfer = (json, pc) => {
                   json.block_num,
                   `fee_${json.transaction_id}`,
                   `rn`,
-                  json.timestamp
+                  json.timestamp,
+                  config.TOKEN
                 ).then((emp) => {
                   finish(set, json, listing, uid, item, Transfer, nft, pc);
                 });
@@ -984,7 +989,8 @@ exports.transfer = (json, pc) => {
                 json.block_num,
                 `fee_${json.transaction_id}`,
                 `rn`,
-                json.timestamp
+                json.timestamp,
+                config.TOKEN
               ).then((emp) => {
                 finish(set, json, listing, uid, item, Transfer, nft, pc);
               });
@@ -1513,7 +1519,7 @@ exports.transfer = (json, pc) => {
           let msg = "";
           if (remaining == order.amount) {
             msg = `@${json.from} set a buy order at ${contrate.rate}.`;
-          } else if (order.type != 'SPK' && json.from != "rn") {
+          } else if (order.token != 'SPK' && json.from != "rn") {
             msg = `@${json.from} | order received.`;
             waiting = add("rn", fee);
           } else {
@@ -1523,7 +1529,7 @@ exports.transfer = (json, pc) => {
           }
           if (config.hookurl || config.status)
             postToDiscord(msg, `${json.block_num}:${json.transaction_id}`);
-          ops.push({ type: "put", path: [order.type == 'SPK' ? "spk" : "balances", json.from], data: bal });
+          ops.push({ type: "put", path: [order.token == 'SPK' ? "spk" : "balances", json.from], data: bal });
           ops.push({
             type: "put",
             path: ["feed", `${json.block_num}:${json.transaction_id}.${i++}`],
@@ -1532,12 +1538,12 @@ exports.transfer = (json, pc) => {
           if (Object.keys(his).length)
             ops.push({
               type: "put",
-              path: ["dex", order.pair, "his"],
+              path: [`dex${order.token == 'SPK' ? 's' : ''}`, order.pair, "his"],
               data: his,
             });
           if (!path) {
             Promise.all([waiting]).then((empty) => {
-              ops.push({ type: "put", path: [`dex${order.type == 'SPK' ? 's' : ''}`, order.pair], data: dex });
+              ops.push({ type: "put", path: [`dex${order.token == 'SPK' ? 's' : ''}`, order.pair], data: dex });
               ops.push({ type: "put", path: ["stats"], data: stats });
               if (process.env.npm_lifecycle_event == "test") pc[2] = ops;
               store.batch(ops, pc);

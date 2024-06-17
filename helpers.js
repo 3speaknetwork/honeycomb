@@ -833,7 +833,7 @@ const DEX = {
       }
     }
   },
-  buyTokenFromDex: (amount, type, num, txid, to, timestamp, memo = '') => {
+  buyTokenFromDex: (amount, type, num, txid, to, timestamp, token, memo = '') => {
     return new Promise((resolve, reject) => {
       require('./processing_routes/dex').transfer({
         from: to,
@@ -841,7 +841,8 @@ const DEX = {
         amount: {
           amount,
           precision: 3,
-          nai: type == 'HIVE' ? '@@000000021' : '@@000000013'
+          nai: type == 'HIVE' ? '@@000000021' : '@@000000013',
+          token
         },
         memo,
         block_num: num,

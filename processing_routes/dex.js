@@ -1513,7 +1513,7 @@ exports.transfer = (json, pc) => {
           let msg = "";
           if (remaining == order.amount) {
             msg = `@${json.from} set a buy order at ${contrate.rate}.`;
-          } else if (json.from != "rn") {
+          } else if (order.type != 'SPK' && json.from != "rn") {
             msg = `@${json.from} | order received.`;
             waiting = add("rn", fee);
           } else {
@@ -1523,7 +1523,7 @@ exports.transfer = (json, pc) => {
           }
           if (config.hookurl || config.status)
             postToDiscord(msg, `${json.block_num}:${json.transaction_id}`);
-          ops.push({ type: "put", path: ["balances", json.from], data: bal });
+          ops.push({ type: "put", path: [order.type == 'SPK' ? "spk" : "balances", json.from], data: bal });
           ops.push({
             type: "put",
             path: ["feed", `${json.block_num}:${json.transaction_id}.${i++}`],
@@ -1537,7 +1537,7 @@ exports.transfer = (json, pc) => {
             });
           if (!path) {
             Promise.all([waiting]).then((empty) => {
-              ops.push({ type: "put", path: ["dex", order.pair], data: dex });
+              ops.push({ type: "put", path: [`dex${order.type == 'SPK' ? 's' : ''}`, order.pair], data: dex });
               ops.push({ type: "put", path: ["stats"], data: stats });
               if (process.env.npm_lifecycle_event == "test") pc[2] = ops;
               store.batch(ops, pc);

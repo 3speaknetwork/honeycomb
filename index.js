@@ -1037,28 +1037,28 @@ function startWith(hash, second) {
                   if (hash) {
                     var cleanState = data[1];
                     if (config.mirrorNet && hash == replay) { //test net and upgrade init
-                      delete cleanState.powd
-                      delete cleanState.govd
-                      delete cleanState.spkVote
-                      delete cleanState.chrono
-                      cleanState.dexs = {
-                        hive: {
-                          buyBook: "",
-                          sellBook: "",
-                          days: {},
-                          buyOrders: {},
-                          sellOrders: {},
-                          tick: "1.0"
-                        },
-                        hbd: {
-                          buyBook: "",
-                          sellBook: "",
-                          days: {},
-                          buyOrders: {},
-                          sellOrders: {},
-                          tick: "1.0"
-                        },
-                      }
+                      // delete cleanState.powd
+                      // delete cleanState.govd
+                      // delete cleanState.spkVote
+                      // delete cleanState.chrono
+                      // cleanState.dexs = {
+                      //   hive: {
+                      //     buyBook: "",
+                      //     sellBook: "",
+                      //     days: {},
+                      //     buyOrders: {},
+                      //     sellOrders: {},
+                      //     tick: "1.0"
+                      //   },
+                      //   hbd: {
+                      //     buyBook: "",
+                      //     sellBook: "",
+                      //     days: {},
+                      //     buyOrders: {},
+                      //     sellOrders: {},
+                      //     tick: "1.0"
+                      //   },
+                      // }
                       cleanState.dex = {
                         hive: {
                           buyBook: "",
@@ -1080,7 +1080,7 @@ function startWith(hash, second) {
                       cleanState.stats.channel_bytes = 1024
                       cleanState.stats.channel_min = 100
                       cleanState.stats.interestRate = 303311 // 100% for 2 years compounded every 5 minutes
-                      cleanState.stats.validators_registered = "00" //validator registeration
+                      // cleanState.stats.validators_registered = "00" //validator registeration
                       cleanState.stats.validators = "20.500000" // number of validators
                       cleanState.stats.val_threshold = 0
                       cleanState.stats.flags_to_penalty = "2.50000" //flags until penalty
@@ -1126,31 +1126,31 @@ function startWith(hash, second) {
                       cleanState.stats.max_coll_members = 25 //consensus members in DEX
                       cleanState.stats.vals_per_day = 0
                       cleanState.stats.vals_target = "10.00000" // 1000%
-                      cleanState.stats.total_bytes = 9820045
-                      cleanState.stats.total_files = 3
-                      cleanState.stats.ms = {
-                        active_account_auths: {
-                          ["spk-test"]: 1,
-                        },
-                        active_threshold: 1,
-                        memo_key: "STM5GNM3jpjWh7Msts5Z37eM9UPfGwTMU7Ksats3RdKeRaP5SveR9",
-                        owner_key_auths: {
-                          STM6EUEaEywYoxpeVDX1fPDxrsyQLGTsgYf1LLDSHWwiKBdgRhGrx: 1,
-                        },
-                        owner_threshold: 1,
-                        posting_account_auths: {
-                          ["spk-test"]: 1
-                        },
-                        posting_threshold: 1
-                      }
-                      delete cleanState.queue
-                      cleanState.runners = {
-                        ["spk-test"]: {
-                          g: 17672776,
-                          api: "https://spktest.dlux.io",
-                          l: 100
-                        }
-                      }
+                      // cleanState.stats.total_bytes = 9820045
+                      // cleanState.stats.total_files = 3
+                      // cleanState.stats.ms = {
+                      //   active_account_auths: {
+                      //     ["spk-test"]: 1,
+                      //   },
+                      //   active_threshold: 1,
+                      //   memo_key: "STM5GNM3jpjWh7Msts5Z37eM9UPfGwTMU7Ksats3RdKeRaP5SveR9",
+                      //   owner_key_auths: {
+                      //     STM6EUEaEywYoxpeVDX1fPDxrsyQLGTsgYf1LLDSHWwiKBdgRhGrx: 1,
+                      //   },
+                      //   owner_threshold: 1,
+                      //   posting_account_auths: {
+                      //     ["spk-test"]: 1
+                      //   },
+                      //   posting_threshold: 1
+                      // }
+                      // delete cleanState.queue
+                      // cleanState.runners = {
+                      //   ["spk-test"]: {
+                      //     g: 17672776,
+                      //     api: "https://spktest.dlux.io",
+                      //     l: 100
+                      //   }
+                      // }
                     }
                     store.put([], cleanState, function (err) {
                       if (err) {

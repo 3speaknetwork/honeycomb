@@ -689,7 +689,7 @@ exports.contract_close = (json, from, active, pc) => {
             Promise.all(promises).then(exts =>{
               var refunds = {}, promises = []
               for(var i = 0; i < extentions.length; i++){
-                if (parseInt(extentions[i].split(':')[2].split('-')[1]) > json.block_num ){
+                if (extentions[i].split(':')[2] && parseInt(extentions[i].split(':')[2].split('-')[1]) > json.block_num ){
                   if(parseInt(extentions[i].split(':')[2].split('-')[0]) > json.block_num){
                     if(refunds[extentions[i].split(':')[0]])refunds[extentions[i].split(':')[0]].a += parseInt(extentions[i].split(':')[1])
                     else refunds[extentions[i].split(':')[0]] = {

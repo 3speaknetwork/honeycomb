@@ -1295,7 +1295,7 @@ exports.transfer = (json, pc) => {
                 });
                 ops.push({
                   type: "put",
-                  path: ["balances", json.from],
+                  path: [order.token == 'SPK' ? 'spk' : 'balances', json.from],
                   data: bal,
                 });
                 ops.push({

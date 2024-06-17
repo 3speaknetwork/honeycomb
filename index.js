@@ -1077,6 +1077,11 @@ function startWith(hash, second) {
                           tick: "1.0"
                         },
                       }
+                      cleanState.stats.MSHeld = {
+                        HIVE: 0,
+                        HBD: 0
+                      }
+                      cleanState.mss = {}
                       cleanState.stats.channel_bytes = 1024
                       cleanState.stats.channel_min = 100
                       cleanState.stats.interestRate = 303311 // 100% for 2 years compounded every 5 minutes

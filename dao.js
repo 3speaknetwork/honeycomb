@@ -41,7 +41,7 @@ function dao(num) {
             Pfeed = getPathObj(['feed']),
             Ppaid = getPathObj(['paid']),
             Pvals = getPathObj(['val']),
-            Prnfts = getPathObj(['granting']),
+            Pgranting = getPathObj(['granting']),
             PcBroca = getPathObj(['cbroca']),
             PvBroca = getPathObj(['vbroca']),
             PSpk = getPathObj(['spk']),

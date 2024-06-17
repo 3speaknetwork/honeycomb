@@ -418,7 +418,7 @@ function dao(num) {
             spk.u = spk.u + StorageRewards - StorageDist
             for( var acc in SpkShares){
                 const share = parseInt( StakingRewards * SpkShares[acc] / StorageDist) 
-                const theirShare = services[acc] ? parseInt((services[acc].s.c * 5)/(granted[acc].t + (services[acc].s.c * 5)) * share) : 0
+                const theirShare = services[acc] && granted[acc] ? parseInt((services[acc].s.c * 5)/(granted[acc].t + (services[acc].s.c * 5)) * share) : 0
                 const forDist = share - theirShare
                 spk[acc] += theirShare
                 var thisDist = theirShare

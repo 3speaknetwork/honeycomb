@@ -1,4 +1,4 @@
-dexconst config = require("./../config");
+const config = require("./../config");
 
 const { Base64, NFT, DEX } = require("./../helpers");
 const { store, GetNodeOps, spliceOp, plasma } = require("./../index");

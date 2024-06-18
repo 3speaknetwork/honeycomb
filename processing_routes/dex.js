@@ -5,6 +5,7 @@ const { store, GetNodeOps, spliceOp, plasma } = require("./../index");
 const { getPathObj, getPathNum } = require("./../getPathObj");
 const {
   add,
+  addSpk,
   addCol,
   addGov,
   deletePointer,
@@ -1519,9 +1520,9 @@ exports.transfer = (json, pc) => {
           let msg = "";
           if (remaining == order.amount) {
             msg = `@${json.from} set a buy order at ${contrate.rate}.`;
-          } else if (order.token != 'SPK' && json.from != "rn") {
+          } else if (json.from != "rn") {
             msg = `@${json.from} | order received.`;
-            waiting = add("rn", fee);
+            waiting = order.token != 'SPK' ? add("rn", fee) : addSpk("u", fee)
           } else {
             console.log({ fee });
             msg = `@${json.from} | order received.`;

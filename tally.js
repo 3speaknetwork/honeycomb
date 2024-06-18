@@ -125,20 +125,22 @@ exports.tally = (num, plasma, isStreaming) => {
                         }
                     }
                     var owners = 0;
-                    var hive_offset = 0
-                    var hbd_offset = 0
+                    var hive_check = stats.MSHeld.HBD
+                    var hbd_check = stats.MSHeld.HIVE
                     for (var owner in stats.ms.active_account_auths) {
-                        if(nodes[owner]?.report?.block % 10000 < 101 && nodes[owner]?.report?.hive_offset == hive_offset || (!owners && nodes[owner]?.report?.hive_offset))hive_offset = nodes[owner]?.report?.hive_offset
-                        else hive_offset = 0
-                        if(nodes[owner]?.report?.block % 10000 < 101 && nodes[owner]?.report?.hbd_offset == hbd_offset || (!owners && nodes[owner]?.report?.hbd_offset))hbd_offset = nodes[owner]?.report?.hbd_offset
-                        else hbd_offset = 0
+                        if(nodes[owner]?.report?.block % 10000 < 101 && nodes[owner]?.report?.hive_check == hive_check || (!owners && nodes[owner]?.report?.hive_check))hive_check = nodes[owner]?.report?.hive_check
+                        else hive_check = 0
+                        if(nodes[owner]?.report?.block % 10000 < 101 && nodes[owner]?.report?.hbd_check == hbd_check || (!owners && nodes[owner]?.report?.hbd_check))hbd_check = nodes[owner]?.report?.hbd_check
+                        else hbd_check = 0
                         if (nodes[owner]?.report?.hash == consensus) {
                             owners++;
                         }
                     }
                     // Adjusts amount with 100% agreement of keyholders
-                    stats.MSHeld.HBD -= hbd_offset
-                    stats.MSHeld.HIVE -= hive_offset
+                    if (owners < stats.ms.active_threshold){
+                        stats.MSHeld.HBD = hbd_check
+                        stats.MSHeld.HIVE = hive_check
+                    }
                     if (owners < stats.ms.active_threshold) consensus = undefined; //ensure owners are part of consensus branch
                     if (!consensus && stats.chaos) {
                         //lower consensus threshold to owners in case of non-agreement

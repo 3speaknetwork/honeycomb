@@ -775,8 +775,8 @@ function startApp() {
                   Hive.getAccounts([config.msaccount]).then((r) => {
                     getPathObj(['stats']).then(stats => {
                       try {
-                        plasma.hbd_offset = stats.MSHeld.HBD - parseInt(parseFloat(r[0].hbd_balance) * 1000)
-                        plasma.hive_offset = stats.MSHeld.HIVE - parseInt(parseFloat(r[0].balance) * 1000)
+                        plasma.hbd_offset = parseInt(parseFloat(r[0].hbd_balance) * 1000)
+                        plasma.hive_offset = parseInt(parseFloat(r[0].balance) * 1000)
                       } catch (e) { }
                     })
                   });

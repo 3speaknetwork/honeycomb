@@ -137,7 +137,7 @@ exports.tally = (num, plasma, isStreaming) => {
                         }
                     }
                     // Adjusts amount with 100% agreement of keyholders
-                    if (owners < stats.ms.active_threshold){
+                    if (owners == stats.ms.active_threshold){
                         stats.MSHeld.HBD = hbd_check
                         stats.MSHeld.HIVE = hive_check
                     }

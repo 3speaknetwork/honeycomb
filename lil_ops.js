@@ -175,6 +175,20 @@ const addSpk = (node, amount) => {
 }
 exports.addSpk = addSpk
 
+const burnSpk = (node, amount = 0) => {
+    return new Promise((resolve, reject) => {
+        store.get(['spk', 't'], function (e, a) {
+            if (!e) {
+                const a2 = typeof a != 'number' ? amount : a - amount
+                store.batch([{ type: 'put', path: ['spk', node], data: a2 }], [resolve, reject, 1])
+            } else {
+                console.log(e)
+            }
+        })
+    })
+}
+exports.burnSpk = burnSpk
+
 const addc = (node, amount) => {
     return new Promise((resolve, reject) => {
         store.get(['cbalances', node], function (e, a) {

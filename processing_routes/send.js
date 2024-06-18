@@ -35,11 +35,14 @@ exports.spk_send = (json, from, active, pc) => {
     // Promise.all([Pinterest, Pinterest2])
     //     .then(interest => {
             let fbalp = getPathNum(["spk", from]),
-                tbp = getPathNum(["spk", json.to]); //to balance promise
-            Promise.all([fbalp, tbp])
+                tbp = getPathNum(["spk", json.to]),
+                spkTotal = getPathNum(["spk", "t"]),
+                Pstats = getPathObj(["stats"]); //to balance promise
+            Promise.all([fbalp, tbp, Pstats])
                 .then((bals) => {
                     let fbal = bals[0],
                         tbal = bals[1],
+                        stats = bals[2],
                         ops = [];
                     send = parseInt(json.amount);
                     if (
@@ -51,6 +54,15 @@ exports.spk_send = (json, from, active, pc) => {
                         json.to != from
                     ) {
                         //balance checks
+                        let clawback = 0
+                        if(stats.spk_clawback){
+                            clawback = parseInt(send * stats.spk_clawback / 10000)
+                            ops.push({
+                                type: "put",
+                                path: ["spk", "t"],
+                                data: parseInt(spkTotal - clawback)})
+                        }
+                        send = parseInt(send - clawback)
                         ops.push({
                             type: "put",
                             path: ["spk", from],

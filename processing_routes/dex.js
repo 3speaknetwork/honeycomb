@@ -14,6 +14,7 @@ const {
   hashThis,
   isEmpty,
   addMT,
+  burnSpk,
 } = require("./../lil_ops");
 const { postToDiscord } = require("./../discord");
 const stringify = require("json-stable-stringify");
@@ -415,6 +416,7 @@ exports.transfer = (json, pc) => {
     json.memo == 'AUCTION'
   ) {
     const amount = parseInt(json.amount.amount);
+    var clawback = 0;
     var purchase,
       Pstats = getPathObj(["stats"]),
       Pbal = getPathNum(["auction", json.from])
@@ -1132,13 +1134,6 @@ exports.transfer = (json, pc) => {
             if (price) item = dex.sellBook.split("_")[1].split(",")[0];
             else price = dex.tick;
             console.log("Matching...", { order, price, item });
-            console.log(
-              item,
-              order.pair == "hbd",
-              order.pair == "hive",
-              (order.token == 'SPK' || price <= stats.icoPrice / 1000 || !config.features.ico),
-              order.token != 'SPK' || price <= stats.icoPrice / 1000 || !config.features.ico,
-              (order.type == "MARKET" ||(order.type == "LIMIT" && order.rate >= price)))
             if (
               item &&
               (order.pair == "hbd" ||
@@ -1152,6 +1147,11 @@ exports.transfer = (json, pc) => {
               if (next && next[order.pair] <= remaining) {
                 if (next[order.pair]) {
                   console.log("Partial Fill");
+                  if(order.token == 'SPK' && stats.spk_clawback){
+                    newClawback = parseInt((remaining / next.amount) * stats.spk_clawback / 10000)
+                    clawback += newClawback
+                    next.amount -= newClawback
+                  }
                   filled += next.amount - next.fee;
                   bal += next.amount - next.fee; //update the balance
                   fee += next.fee; //add the fees
@@ -1237,6 +1237,11 @@ exports.transfer = (json, pc) => {
                 dex.sellBook = DEX.remove(item, dex.sellBook);
               } else {
                 console.log("Filled");
+                if(order.token == 'SPK' && stats.spk_clawback){
+                  newClawback = parseInt((remaining / next.amount) * stats.spk_clawback / 10000)
+                  clawback += newClawback
+                  next.amount -= newClawback
+                }
                 next[order.pair] = next[order.pair] - remaining; // modify the contract
                 const tokenAmount = parseInt(remaining / parseFloat(next.rate));
                 const feeAmount = parseInt(
@@ -1325,6 +1330,7 @@ exports.transfer = (json, pc) => {
             } else {
               if (
                 config.features.ico &&
+                order.token != 'SPK' &&
                 order.pair == "hive" &&
                 (order.type == "MARKET" ||
                   (order.type == "LIMIT" &&
@@ -1543,7 +1549,7 @@ exports.transfer = (json, pc) => {
               data: his,
             });
           if (!path) {
-            Promise.all([waiting]).then((empty) => {
+            Promise.all([waiting, burnSpk(clawback)]).then((empty) => {
               ops.push({ type: "put", path: [`dex${order.token == 'SPK' ? 's' : ''}`, order.pair], data: dex });
               ops.push({ type: "put", path: ["stats"], data: stats });
               if (process.env.npm_lifecycle_event == "test") pc[2] = ops;

@@ -13,6 +13,7 @@ const {
   hashThis,
   isEmpty,
   addMT,
+  burnSpk,
 } = require("./../lil_ops");
 const { postToDiscord } = require("./../discord");
 const stringify = require("json-stable-stringify");
@@ -62,6 +63,7 @@ exports.spk_dex_sell = (json, from, active, pc) => {
         adds = [],
         his = {},
         fee = 0,
+        clawback = 0,
         hours = parseInt(json.hours) || 720;
       if (hours > 720) {
         hours = 720;
@@ -96,6 +98,11 @@ exports.spk_dex_sell = (json, from, active, pc) => {
             }
             if (next.amount <= remaining) {
               if (next[order.pair]) {
+                if(stats.spk_clawback){
+                  newClawback = parseInt(next.amount * stats.spk_clawback / 10000)
+                  clawback += newClawback
+                  next.amount -= newClawback
+                }
                 filled += next.amount;
                 adds.push([next.from, next.amount - next.fee]);
                 his[`${json.block_num}:${i}:${json.transaction_id}`] = {
@@ -178,6 +185,11 @@ exports.spk_dex_sell = (json, from, active, pc) => {
                 ops.push({ type: "del", path: ["chrono", next.expire_path] }); //remove the chrono
               }
             } else {
+              if(stats.spk_clawback){
+                newClawback = parseInt((remaining / next.amount) * stats.spk_clawback / 10000)
+                clawback += newClawback
+                next.amount -= newClawback
+              }
               const thisfee = parseInt((remaining / next.amount) * next.fee);
               const thistarget = parseInt(
                 (remaining / next.amount) * next[order.pair]
@@ -331,7 +343,8 @@ exports.spk_dex_sell = (json, from, active, pc) => {
             path: ["dexs", order.pair, "his"],
             data: his,
           });
-        addMT(["spk", "rn"], fee).then((empty) => {
+      var someadds = [addMT(["spk", "u"], fee), burnSpk(clawback)];
+        Promise.all(someadds).then((empty) => {
           addop(0, addops);
         });
         function addop(i, a) {

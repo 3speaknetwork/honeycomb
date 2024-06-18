@@ -392,7 +392,7 @@ function dao(num) {
                 stats.spk_clawback = 0
             } else {
                 stats.spk_interest_rate = totBroca + 1 // off
-                stats.spk_clawback= parseInt(diff / -10) // .5% clawback minimum 5% maximum
+                stats.spk_clawback = parseInt(diff / -10) // .5% clawback minimum 5% maximum
             }
             var newSPK = parseInt(totBroca / stats.spk_interest_rate)
             spk.t += newSPK

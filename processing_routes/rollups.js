@@ -303,7 +303,7 @@ exports.channel_update = (json, from, active, pc) => {
         }
         if (json.m && typeof json.m == 'string'){
           proffer.m = json.m //memo
-          proffer.m = proffer.m.replace(/[^a-zA-Z0-9,:\/.-_?#&='+:;! \x00-\x7F\u0000-\u007F]/gm, '-')
+          proffer.m = stringify(proffer.m)
         }
         proffer.nt = "1"
         var cids = json.c.split(',')
@@ -810,7 +810,7 @@ exports.update_metadata = (json, from, active, pc) => {
         if(contract.e){
             contract.m = json.m
             //replace all non-allows chars with -
-            contract.m = contract.m.replace(/[^a-zA-Z0-9,:\/.-_?#&='+:;! \x00-\x7F\u0000-\u007F]/gm, '-')
+            contract.m = stringify(contract.m)
             ops.push({
               type: "put",
               path: ["contract", from, json.id],

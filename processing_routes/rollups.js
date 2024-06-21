@@ -9,6 +9,9 @@ const { chronAssign, broca_calc } = require("./../lil_ops")
 const { postToDiscord } = require('./../discord');
 const { Base64 } = require("../helpers");
 const { put } = require("request");
+
+const stringify = require('json-stable-stringify');
+
 /*{
 rollups: ['j.w.ts','j.w.ts']
 }*/

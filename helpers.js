@@ -5,6 +5,7 @@ const config = require('./config')
 const stringify = require('json-stable-stringify');
 var WebSocketClient = require('ws').client;
 const fetch = require("node-fetch");
+const HR = require("./processing_routes/index");
 
 exports.sortBuyArray = (array, key) => array.sort(function (a, b) {
   return b[key] - a[key];
@@ -521,32 +522,44 @@ const Chron = {
       Promise.all(promies)
         .then((mem) => {
           let contract = mem[0],
-          stats = mem[1]
+          stats = mem[1],
           ops = [],
-          bytes = 0
-          if(contract.df){
-            var items = Object.keys(contract.df)//goods
-            for (var i = 0; i < items.length; i++) {
-              bytes += contract.df[items[i]]
-              ops.push({ type: "del", path: ['IPFS', items[i].split("").reverse().join("")] });
+          bytes = 0,
+          broca = broca_calc(mem[2], mem[3], stats, num),
+          renew = contract.m ? JSON.parse(contract.m)[0] & 1 : 0
+          if (renew && broca.split(',')[0] >= contract.r) {
+            HR.extend({
+              broca: contract.r,
+              id: contract.i,
+              file_owner: contract.t,
+              block_num: num,
+              transaction_id: `v_op${contract.t}autoExtend${contract.i}`
+            }, contract.t, true, [resolve, reject, 0])
+          } else {
+            if(contract.df){
+              var items = Object.keys(contract.df)//goods
+              for (var i = 0; i < items.length; i++) {
+                bytes += contract.df[items[i]]
+                ops.push({ type: "del", path: ['IPFS', items[i].split("").reverse().join("")] });
+              }
+              stats.total_bytes -= bytes
+              stats.total_files -= items.length
             }
-            stats.total_bytes -= bytes
-            stats.total_files -= items.length
+            ops.push({
+              type: "put",
+              path: ["stats"],
+              data: stats
+            });
+            ops.push({ type: "del", path: ['contract', b.fo, b.id] });
+            ops.push({ type: "del", path: ['cPointers', b.id] });
+            ops.push({
+              type: "put",
+              path: ["feed", `${num}:vop_${id}`],
+              data: `${contract.i} expired`,
+            });
+            ops.push({ type: "del", path: ["chrono", delkey] });
+            store.batch(ops, [resolve, reject]);
           }
-          ops.push({
-            type: "put",
-            path: ["stats"],
-            data: stats
-          });
-          ops.push({ type: "del", path: ['contract', b.fo, b.id] });
-          ops.push({ type: "del", path: ['cPointers', b.id] });
-          ops.push({
-            type: "put",
-            path: ["feed", `${num}:vop_${id}`],
-            data: `${contract.i} expired`,
-          });
-          ops.push({ type: "del", path: ["chrono", delkey] });
-          store.batch(ops, [resolve, reject]);
         })
         .catch((e) => {
           console.log(e);

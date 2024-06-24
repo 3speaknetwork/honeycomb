@@ -1,5 +1,5 @@
 const config = require("./config");
-const VERSION = "v1.2.0-t16";
+const VERSION = "v1.2.0-t17";
 exports.VERSION = VERSION;
 exports.exit = exit;
 exports.processor = processor;
@@ -643,9 +643,11 @@ function startApp() {
                       break;
                     case "contract_close":
                       let Pcontract = getPathObj(['contracts', b.to, b.id]),
-                        Pstatss = getPathObj(["stats"])
+                        Pstatss = getPathObj(["stats"]),
+                        Pbrocaa = getPathObj(["broca", b.to]),
+                        Ppowa = getPathObj(["spow", b.to]);
                       Chron.contractClose(
-                        [Pcontract, Pstatss],
+                        [Pcontract, Pstatss, Pbrocaa, Ppowa],
                         passed.delKey,
                         num,
                         passed.delKey.split(":")[1],

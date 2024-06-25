@@ -475,7 +475,26 @@ exports.extend = (json, from, active, pc) => {
         broca = broca - json.broca
         const exp_block = parseInt(contract.e.split(':')[0])
         if (parseInt(json.power) > 0) {
+          const broca_per_old_term = parseInt((contract.u * contract.p) / (stats.channel_bytes * 3)) || 1
           contract.p++
+          const payUp = exp_block - json.block_num 
+          const broca_per_new_term = parseInt((contract.u * contract.p) / (stats.channel_bytes * 3)) || 1
+          const debt = parseInt((broca_per_new_term - broca_per_old_term) * payUp)
+          if(debt > json.broca){
+            const msg = `@${from} | Failed to increase decentralizition of ${json.id} due to lack of BROCA`
+            ops.push({
+              type: "put",
+              path: ["feed", `${json.block_num}:${json.transaction_id}`],
+              data: msg,
+            });
+            if (config.hookurl || config.status)
+              postToDiscord(msg, `${json.block_num}:${json.transaction_id}`);
+            if (process.env.npm_lifecycle_event == "test") pc[2] = ops;
+            console.log(ops)
+            store.batch(ops, pc);
+          } else {
+            json.broca -= debt
+          }
         }
 
         // (28800 * 30) // term

@@ -527,7 +527,7 @@ const Chron = {
           bytes = 0,
           broca = broca_calc(mem[2], mem[3], stats, num),
           renew = contract.m ? JSON.parse(contract.m)[0] & 1 : 0
-          if (contract.df && renew && parseInt(broca.split(',')[0]) > 1) {
+          if (contract.c == 3 && renew && parseInt(broca.split(',')[0]) > 1) {
             HR.extend({
               broca: parseInt(broca.split(',')[0]) > parseInt( 3 * contract.r / contract.p ) ? parseInt( 3 * contract.r / contract.p ) : parseInt(parseInt(broca.split(',')[0]) / 2 ),
               id: contract.i,

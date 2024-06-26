@@ -474,7 +474,7 @@ exports.extend = (json, from, active, pc) => {
       if (json.broca <= broca && contract.c == 3) {
         broca = broca - json.broca
         const exp_block = parseInt(contract.e.split(':')[0])
-        if (parseInt(json.power) > 0) {
+        if (json.from == contract.t && parseInt(json.power) > 0) {
           const broca_per_old_term = parseInt((contract.u * contract.p) / (stats.channel_bytes * 3)) || 1
           contract.p++
           const payUp = exp_block - json.block_num 

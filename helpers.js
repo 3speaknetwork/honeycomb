@@ -5,7 +5,6 @@ const config = require('./config')
 const stringify = require('json-stable-stringify');
 var WebSocketClient = require('ws').client;
 const fetch = require("node-fetch");
-const HR = require("./processing_routes/index");
 
 exports.sortBuyArray = (array, key) => array.sort(function (a, b) {
   return b[key] - a[key];
@@ -528,7 +527,7 @@ const Chron = {
           broca = broca_calc(mem[2], mem[3], stats, num),
           renew = contract.m ? JSON.parse(contract.m)[0] & 1 : 0
           if (contract.c == 3 && renew && parseInt(broca.split(',')[0]) > 1) {
-            HR.extend({
+            require("./processing_routes/index").extend({
               broca: parseInt(broca.split(',')[0]) > parseInt( 3 * contract.r / contract.p ) ? parseInt( 3 * contract.r / contract.p ) : parseInt(parseInt(broca.split(',')[0]) / 2 ),
               id: contract.i,
               file_owner: contract.t,

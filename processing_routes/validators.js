@@ -111,10 +111,9 @@ var PoA = {
         stats.val_tot_ms = newTotal
         stats.val_count = newCount
         var ops = [{ type: "put", path: ["markets", "node", b.self], data: b },
-        { type: "put", path: ["cbroca"], data: cBroca },
-        { type: "put", path: ["vbroca"], data: vBroca },
         { type: "put", path: ["stats"], data: stats }]
-        console.log(ops)
+        if(Object.keys(vBroca).length)ops.push({ type: "put", path: ["vbroca"], data: vBroca })
+        if(Object.keys(cBroca).length)ops.push({ type: "put", path: ["cbroca"], data: cBroca })
         store.batch(ops, pc)
       })
       else store.batch([{ type: "put", path: ["markets", "node", b.self], data: b }], pc)

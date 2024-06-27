@@ -114,6 +114,7 @@ var PoA = {
         { type: "put", path: ["cbroca"], data: cBroca },
         { type: "put", path: ["vbroca"], data: vBroca },
         { type: "put", path: ["stats"], data: stats }]
+        console.log(ops)
         store.batch(ops, pc)
       })
       else store.batch([{ type: "put", path: ["markets", "node", b.self], data: b }], pc)

@@ -93,7 +93,7 @@ var PoA = {
           for (var j = 0; j < storers; j++) {
             order.push(contracts[i].n[Base64.fromNumber(j)])
           }
-          order = new Set(order)
+          order = [...new Set(order)]
           var acc = []
           for (var acc in accepted) {
             accepted[acc].p = order.indexOf(acc)

@@ -95,9 +95,9 @@ var PoA = {
           }
           order = [...new Set(order)]
           var acc = []
-          for (var acc in accepted) {
-            accepted[acc].p = order.indexOf(acc)
-            acc.push(acc)
+          for (var acct in accepted) {
+            accepted[acct].p = order.indexOf(acct)
+            acc.push(acct)
           }
           // sort acc by p
           acc.sort((a, b) => a.p - b.p)

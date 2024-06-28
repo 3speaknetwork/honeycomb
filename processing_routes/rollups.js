@@ -762,12 +762,12 @@ exports.contract_close = (json, from, active, pc) => {
                 type: "del",
                 path: ['ben', from, json.id.split(":")[0]]
               });
-              ops.push({ type: "del", path: ['contract', contract.t, contract.i] });
-              ops.push({ type: "del", path: ['cPointers', contract.i] });
+              ops.push({ type: "del", path: ['contract', contract.t, json.id] });
+              ops.push({ type: "del", path: ['cPointers', json.id] });
               ops.push({
                 type: "put",
                 path: ["feed", `${json.block_num}:${json.transaction_id}`],
-                data: `${contract.i} canceled by file owner.`,
+                data: `${json.id} canceled by file owner.`,
               });
 
               ops.push({

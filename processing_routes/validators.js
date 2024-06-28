@@ -233,7 +233,10 @@ var PoA = {
     for (var i = 0; i < a.length; i++) {
       r = r * BigInt(1 + Base38.toNumber(a[i]))
     }
-
+    var gt = Base58.fromNumber(Number(r % 7427658739644928n))
+    while (gt.length < 9) {
+      gt = gt + '1'
+    }
     return Base58.fromNumber(Number(r % 7427658739644928n))
   },
   validate: function (CID, Name, peerIDs, SALT, bn) {

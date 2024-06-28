@@ -56,8 +56,8 @@ const ipfsprotocol = ENV.ipfsprotocol || 'http' //IPFS upload/download protocol
 const bidRate = ENV.BIDRATE || 500 // your vote for the dex fee 500 = 0.500% Max 1000
 
 //HIVE CONFIGS
-var startURL = ENV.STARTURL || "https://rpc.ecency.com/";
-var clientURL = ENV.APIURL || "https://rpc.ecency.com/";
+var startURL = ENV.STARTURL || "https://hive-api.dlux.io/";
+var clientURL = ENV.APIURL || "https://hive-api.dlux.io/";
 const clients = ENV.clients ? ENV.clients.split(" ") : [
   "https://hive-api.dlux.io/",
   //"https://api.c0ff33a.uk/",

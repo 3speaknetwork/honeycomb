@@ -10,7 +10,6 @@ function report(plas, con, poa) {
             const offset = plas.hashBlock % 200 > 100 ? 0 : 100
             for(var i = 0; i < 100; i ++){
                 for(var CID in poa[`${i + offset}`]){
-                    console.log(`${i + offset}`, CID, poa[`${i + offset}`][CID])
                     var formated = [CID, `${i + offset}`]
                     var nodes
                     try {
@@ -33,8 +32,8 @@ function report(plas, con, poa) {
             }
             if(val.length)report.v = val
             if(plas.hashBlock % 10000 == 1){
-                report.hive_offset = plas.hive_offset,
-                report.hbd_offset = plas.hbd_offset
+                report.hive_check = plas.hive_offset,
+                report.hbd_check = plas.hbd_offset
             }
         try {if(r.block > report.block){
                 report.sig = r.sig,
@@ -55,7 +54,6 @@ function report(plas, con, poa) {
             json: JSON.stringify(report),
           },
         ];
-        console.log(op[1])
         delete plasma.oracle
         resolve([
             [0, 0], op

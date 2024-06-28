@@ -220,6 +220,7 @@ var PoA = {
     const gte = this.getPrand58(account, prand)
     const range = parseInt(((val[account] >= cutoff ? cutoff * 2 : val[account] || 1) / total) * (stats.total_files * parseInt(stats.vals_target * 10000) / 288) * 7427658739)
     const lte = Base58.fromNumber(Base58.toNumber(gte) + range)
+    console.log(range, gte, lte)
     return [gte, lte]
   },
   getPrand58(account, prand) {

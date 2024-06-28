@@ -221,7 +221,15 @@ var PoA = {
     const range = parseInt(((val[account] >= cutoff ? cutoff * 2 : val[account] || 1) / total) * (stats.total_files * parseInt(stats.vals_target * 10000) / 288) * 7427658739)
     const lte = Base58.fromNumber(Base58.toNumber(gte) + range)
     if(lte.length > 9)lte = 'zzzzzzzzz'
-    if(gte.length != lte.length)console.log(range, gte, lte, prand, account, val, stats)
+    if(gte.length != lte.length){
+      console.log(
+        this.getPrand58(account, prand),
+        range,
+        gte,
+        lte,
+        Base58.toNumber(gte)
+      )
+    }
     return [gte, lte]
   },
   getPrand58(account, prand) {

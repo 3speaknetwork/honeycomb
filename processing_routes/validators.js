@@ -51,7 +51,7 @@ var PoA = {
             reward = parseInt((contracts[i].p * contracts[i].r * contracts[i].df[b.report.v[i][0]]) / (contracts[i].u * 3))
             if (config.mode == 'verbose') console.log({ contract: contracts[i], reward })
           } catch (e) {
-            console.log(e)
+            if (config.mode == 'verbose') console.log(e)
             continue
           }
           /*
@@ -247,7 +247,7 @@ var PoA = {
         .then(r => r.json())
         .then(json => res(json))
         .catch(e => {
-          console.log('Failed to read:', key)
+          if (config.mode == 'verbose') console.log('Failed to read:', key)
           rej(e)
         })
     })
@@ -258,7 +258,7 @@ var PoA = {
         .then(r => r.json())
         .then(json => res(json))
         .catch(e => {
-          console.log('Failed to read:', key)
+          if (config.mode == 'verbose') console.log('Failed to read:', key)
           rej(e)
         })
     })
@@ -278,7 +278,7 @@ function PA(Name, CID, peerid, SALT, bn) {
   socket.on('connect', (connection) => {
     setTimeout(() => {
       connection.close()
-      console.log("Timeout:", CID)
+      if (config.mode == 'verbose') console.log("Timeout:", CID)
     }, 240000)
     connection.send(JSON.stringify({ Name, CID, peerid, SALT }));
     connection.on('message', (event) => {
@@ -312,12 +312,12 @@ function PA(Name, CID, peerid, SALT, bn) {
         if (config.mode == 'verbose') console.log('Proof Invalid', { data })
         connection.close()
       } else {
-        console.log('Unknown Status:', data)
+        if (config.mode == 'verbose') console.log('Unknown Status:', data)
       }
     })
   })
   socket.on('connectFailed', function (error) {
-    console.log('Connect Error: ' + error.toString());
+    if (config.mode == 'verbose') console.log('Connect Error: ' + error.toString());
   });
   socket.connect(`${config.poav_address}/validate`)
 }

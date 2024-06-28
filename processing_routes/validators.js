@@ -237,7 +237,7 @@ var PoA = {
     while (gt.length < 9) {
       gt = gt + '1'
     }
-    return Base58.fromNumber(Number(r % 7427658739644928n))
+    return gt
   },
   validate: function (CID, Name, peerIDs, SALT, bn) {
     peerids = peerIDs.split(',')

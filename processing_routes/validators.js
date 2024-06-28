@@ -244,7 +244,7 @@ var PoA = {
     }
     var gt = Base58.fromNumber(Number(r % 7427658739644928n))
     while (gt.length < 9) {
-      gt = '1' + gt
+      gt = '1'
     }
     return gt
   },

@@ -32,7 +32,11 @@ var PoA = {
     if (promises.length) Promise.all(promises).then(contractIDs => {
       promises = []
       for (var i = 0; i < contractIDs.length; i++) {
-        promises.push(getPathObj(['contract', contractIDs[i].split(',')[0], contractIDs[i].split(',')[1]]))
+        try{
+          promises.push(getPathObj(['contract', contractIDs[i].split(',')[0], contractIDs[i].split(',')[1]]))
+        } catch (e) {
+          continue
+        }
       }
       if (promises.length) Promise.all(promises).then(contracts => {
         const oldTotal = stats.val_tot_ms || 0

@@ -17,7 +17,6 @@ exports.report = (json, from, active, pc) => {
         if (from == b.self && active) {
             b.report = json
             delete b.report.timestamp
-            console.log(b.report.v , from)
             if(b.report.v){
                 PoA.Check(b, rand, stats, val, cBroca, mem[5], pc)
             } else {

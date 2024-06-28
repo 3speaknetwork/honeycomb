@@ -59,10 +59,10 @@ var PoA = {
           get and maintain STDDEV of validation times
 
           */
-          var preferential = contract.b
+          var preferential = contracts[i].b
           var paid = 0
-          if (contract.ex) {
-            var terms = contract.ex.split(',')
+          if (contracts[i].ex) {
+            var terms = contracts[i].ex.split(',')
             for (var j = 0; j < terms.length; j++) {
               const thisTermBuyer = terms[j].split(':')[0]
               const thisTerm = terms[j].split(':')[1]

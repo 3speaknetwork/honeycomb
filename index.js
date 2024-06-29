@@ -643,7 +643,7 @@ function startApp() {
                       break;
                     case "contract_close":
                       console.log(b)
-                      let Pcontract = getPathObj(['contracts', b.to, b.id]),
+                      let Pcontract = getPathObj(['contract', b.to, b.id]),
                         Pstatss = getPathObj(["stats"]),
                         Pbrocaa = getPathObj(["broca", b.to]),
                         Ppowa = getPathObj(["spow", b.to]);

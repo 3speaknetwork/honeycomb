@@ -642,11 +642,10 @@ function startApp() {
                       ).then((x) => res(x));
                       break;
                     case "contract_close":
-                      console.log(b)
-                      let Pcontract = getPathObj(['contract', b.to, b.id]),
+                      let Pcontract = getPathObj(['contract', b.fo, b.id]),
                         Pstatss = getPathObj(["stats"]),
-                        Pbrocaa = getPathObj(["broca", b.to]),
-                        Ppowa = getPathObj(["spow", b.to]);
+                        Pbrocaa = getPathObj(["broca", b.fo]),
+                        Ppowa = getPathObj(["spow", b.fo]);
                       Chron.contractClose(
                         [Pcontract, Pstatss, Pbrocaa, Ppowa],
                         passed.delKey,

@@ -520,7 +520,6 @@ const Chron = {
     return new Promise((resolve, reject) => {
       Promise.all(promies)
         .then((mem) => {
-          console.log(mem)
           let contract = mem[0],
           stats = mem[1],
           ops = [],

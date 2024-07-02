@@ -94,12 +94,12 @@ var PoA = {
           }
           var order = [preferential]
           const storers = Base64.toNumber(contracts[i].nt)
-          console.log(contracts[i].nt)
           for (var j = 0; j < storers; j++) {
-            console.log(contracts[i].n)
             order.push(contracts[i].n[Base64.fromNumber(j)])
           }
+          console.log({order})
           order = [...new Set(order)]
+          console.log({order})
           console.log({order})
           var acc = []
           for (var acct in accepted) {

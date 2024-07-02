@@ -108,7 +108,7 @@ var PoA = {
           var acc = []
           for (var acct in accepted) {
             accepted[acct].p = order.indexOf(acct)
-            acc.push(acct)
+            acc.push(accepted[acct])
           }
           console.log({acc})
           // sort acc by p

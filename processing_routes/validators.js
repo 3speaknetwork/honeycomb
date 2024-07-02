@@ -89,6 +89,8 @@ var PoA = {
               } else if (Math.abs(delta) < 3 * oldStdDev) {
                 paid++
                 accepted[b.report.v[i][j][0]] = { a: b.report.v[i][j][0], r: 1, p: 0}
+              } else {
+                console.log(delta, b.report.v[i][j])
               }
             }
           }

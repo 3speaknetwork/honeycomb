@@ -42,7 +42,10 @@ var PoA = {
         const oldTotal = stats.val_tot_ms || 0
         const oldCount = stats.val_count || 0
         const oldMean = parseInt(oldTotal / oldCount)
-        const oldStdDev = parseInt(Math.sqrt((oldTotal - oldMean) / oldCount))
+        const oldStdDevNum = stats.val_std_dev_num || parseInt((Math.pow(oldTotal - oldMean, 2)) * 1000)
+        const oldStdDev = parseInt(Math.sqrt(oldStdDevNum / (oldCount * 1000)))
+        var newStdDevNum = oldStdDevNum
+
         var newCount = oldCount
         var newTotal = oldTotal
         for (var i = 0; i < contracts.length; i++) {
@@ -82,6 +85,7 @@ var PoA = {
               newCount++
               newTotal += b.report.v[i][j][1]
               delta = b.report.v[i][j][1] - oldMean
+              newStdDevNum = parseInt(newStdDevNum + (Math.pow(b.report.v[i][j][1] - oldMean, 2) * 1000))
               // inside of 2 std devs
               if (Math.abs(delta) < 2 * oldStdDev) {
                 paid++
@@ -119,6 +123,7 @@ var PoA = {
         delete b.report.v
         stats.val_tot_ms = newTotal
         stats.val_count = newCount
+        stats.val_std_dev_num = newStdDevNum
         var ops = [{ type: "put", path: ["markets", "node", b.self], data: b },
         { type: "put", path: ["stats"], data: stats }]
         if(Object.keys(vBroca).length)ops.push({ type: "put", path: ["vbroca"], data: vBroca })

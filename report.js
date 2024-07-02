@@ -23,7 +23,7 @@ function report(plas, con, poa) {
                         
                     }
                 }
-                if(JSON.stringify(formated).length > 7800)break
+                if(JSON.stringify(val).length > 7800)break
             }
             let report = {
                 hash: plas.hashLastIBlock,

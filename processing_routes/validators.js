@@ -115,6 +115,7 @@ var PoA = {
           }
           if(paid)vBroca[b.self] = vBroca[b.self] ? vBroca[b.self] + (2 * reward) : ( 2 * reward ) //validator reward
         }
+        console.log(cBroca)
         delete b.report.v
         stats.val_tot_ms = newTotal
         stats.val_count = newCount

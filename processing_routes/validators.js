@@ -45,7 +45,7 @@ var PoA = {
         const oldStdDevNum = stats.val_std_dev_num || parseInt((Math.pow(oldTotal - oldMean, 2)) * 1000)
         const oldStdDev = parseInt(Math.sqrt(oldStdDevNum / (oldCount * 1000)))
         var newStdDevNum = oldStdDevNum
-
+        console.log({oldStdDev})
         var newCount = oldCount
         var newTotal = oldTotal
         for (var i = 0; i < contracts.length; i++) {

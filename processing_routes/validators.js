@@ -97,7 +97,7 @@ var PoA = {
             }
           }
           var order = []
-          if(preferential)order.push(preferential)
+          if(typeof preferential == "string")order.push(preferential)
           const storers = Base64.toNumber(contracts[i].nt)
           for (var j = 0; j < storers; j++) {
             order.push(contracts[i].n[Base64.fromNumber(j)])

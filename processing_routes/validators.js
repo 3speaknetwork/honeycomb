@@ -110,7 +110,6 @@ var PoA = {
             accepted[acct].p = order.indexOf(acct)
             acc.push(accepted[acct])
           }
-          console.log({acc})
           // sort acc by p
           acc.sort((a, b) => a.p - b.p)
           for (var j = 0; j < acc.length; j++) {
@@ -120,7 +119,6 @@ var PoA = {
           }
           if(paid)vBroca[b.self] = vBroca[b.self] ? vBroca[b.self] + (2 * reward) : ( 2 * reward ) //validator reward
         }
-        console.log(cBroca)
         delete b.report.v
         stats.val_tot_ms = newTotal
         stats.val_count = newCount

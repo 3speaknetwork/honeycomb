@@ -93,8 +93,6 @@ var PoA = {
               } else if (Math.abs(delta) < 3 * oldStdDev) {
                 paid++
                 accepted[b.report.v[i][j][0]] = { a: b.report.v[i][j][0], r: 1, p: 0}
-              } else {
-                console.log(delta, b.report.v[i][j])
               }
             }
           }
@@ -113,7 +111,6 @@ var PoA = {
           // sort acc by p
           acc.sort((a, b) => a.p - b.p)
           for (var j = 0; j < acc.length; j++) {
-            console.log(acc[j])
             if(j < contracts[i].p) cBroca[acc[j].a] =  cBroca[acc[j].a] ? cBroca[acc[j].a] + reward : reward
             else cBroca[acc[j].a] =  cBroca[acc[j].a] ? cBroca[acc[j].a] + parseInt(reward / Math.pow(j - 1 - contracts[i].p, 2)) : parseInt(reward / Math.pow(j - 1 - contracts[i].p, 2))
           }

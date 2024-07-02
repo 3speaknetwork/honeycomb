@@ -98,11 +98,13 @@ var PoA = {
             order.push(contracts[i].n[Base64.fromNumber(j)])
           }
           order = [...new Set(order)]
+          console.log({order})
           var acc = []
           for (var acct in accepted) {
             accepted[acct].p = order.indexOf(acct)
             acc.push(acct)
           }
+          console.log({acc})
           // sort acc by p
           acc.sort((a, b) => a.p - b.p)
           for (var j = 0; j < acc.length; j++) {

@@ -530,7 +530,6 @@ function dao(num) {
             daops.push({ type: 'put', path: ['stats'], data: stats });
             daops.push({ type: 'put', path: ['balances'], data: bals });
             daops.push({ type: 'put', path: ['cbalances'], data: cbals });
-            daops.push({ type: 'put', path: ['cbroca'], data: cbroca });
             daops.push({ type: 'put', path: ['posts'], data: cpost });
             daops.push({ type: 'put', path: ['markets', 'node'], data: mnode });
             daops.push({ type: 'put', path: ['delegations'], data: deles });

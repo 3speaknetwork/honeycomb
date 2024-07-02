@@ -20,6 +20,7 @@ function report(plas, con, poa) {
                             if(poa[`${i + offset}`][CID].npid[nodes[j]] &&  poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed)formated.push([nodes[j], msIzer(poa[`${i + offset}`][CID].npid[nodes[j]].Elapsed)])
                         }
                         if(formated.length > 2)val.push(formated)
+                        if(JSON.stringify(formated).length > 7900)break
                     }
                 }
             }

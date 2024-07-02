@@ -45,7 +45,6 @@ var PoA = {
         const oldStdDevNum = stats.val_std_dev_num || parseInt((Math.pow(oldTotal - oldMean, 2)) * 1000)
         const oldStdDev = parseInt(Math.sqrt(oldStdDevNum / (oldCount * 1000)))
         var newStdDevNum = oldStdDevNum
-        console.log({oldStdDev})
         var newCount = oldCount
         var newTotal = oldTotal
         for (var i = 0; i < contracts.length; i++) {
@@ -104,9 +103,7 @@ var PoA = {
           for (var j = 1; j < storers; j++) {
             order.push(contracts[i].n[Base64.fromNumber(j)])
           }
-          console.log({order, preferential, paid, accepted})
           order = [...new Set(order)]
-          console.log({order})
           var acc = []
           for (var acct in accepted) {
             accepted[acct].p = order.indexOf(acct)

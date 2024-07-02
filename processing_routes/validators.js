@@ -114,6 +114,7 @@ var PoA = {
           // sort acc by p
           acc.sort((a, b) => a.p - b.p)
           for (var j = 0; j < acc.length; j++) {
+            console.log(acc[j])
             if(j < contracts[i].p) cBroca[acc[j].a] =  cBroca[acc[j].a] ? cBroca[acc[j].a] + reward : reward
             else cBroca[acc[j].a] =  cBroca[acc[j].a] ? cBroca[acc[j].a] + parseInt(reward / Math.pow(j - 1 - contracts[i].p, 2)) : parseInt(reward / Math.pow(j - 1 - contracts[i].p, 2))
           }

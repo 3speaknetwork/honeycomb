@@ -122,7 +122,7 @@ const features = {
     delegate: false, //delegation
     daily: true,
     liquidity: false, //liquidity
-    ico: false, //ico
+    ico: true, //ico
     dex: true, //dex
     nft: false, //nfts
     state: true, //api dumps

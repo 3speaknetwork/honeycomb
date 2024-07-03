@@ -260,7 +260,7 @@ function dao(num) {
                     var dailyICODistrobution = bals.ra,
                         y = stats.inAuction;
                         //AMM here to settle DEX orders favorable to this price
-                    post = post + `### LARYNX Auction Results:\n${parseFloat(dailyICODistrobution / 1000).toFixed(3)} LARYNX has been minted and purchased at ${parseFloat(y / 1000).toFixed(3)} HIVE today.\n`;
+                    post = post + `### LARYNX Auction Results:\n${parseFloat(dailyICODistrobution / 1000).toFixed(3)} LARYNX has been minted and purchased with ${parseFloat(y / 1000).toFixed(3)} HIVE today.\n`;
                     var auctionEntries = Object.keys(ico), iico = 0, ihive = 0
                     for (var node in ico) {
                         ihive += ico[node]
@@ -272,7 +272,7 @@ function dao(num) {
                             bals.ra = dailyICODistrobution
                         }
                     }
-                    stats.hive_pool = ihive
+                    stats.hive_pool = ihive + stats.hive_pool
                     dailyICODistrobution = 0;
                     ico = {}
             }
@@ -422,13 +422,35 @@ function dao(num) {
             }
             const rewardedServices = Object.keys(cspk).length
             spk.u = spk.u + StorageRewards - StorageDist
+            var ihive = stats.hive_pool
+            var thive = 0
             for( var acc in SpkShares){
                 const share = parseInt( StakingRewards * SpkShares[acc] / StorageDist)
-                if(!share)continue
+                const payout = parseInt( ihive * SpkShares[acc] / StorageDist)
+                thive += payout
+                if(!share || !payout)continue
                 const theirShare = services[acc] && granted[acc] ? parseInt((services[acc].s.c * 5)/(granted[acc].t + (services[acc].s.c * 5)) * share) : 0
                 const forDist = share - theirShare
                 cspk[acc] += theirShare
                 var thisDist = theirShare
+                 const transfer = [
+                  "transfer",
+                  {
+                    from: config.msaccount,
+                    to: acc,
+                    amount:
+                      parseFloat(payout / 1000).toFixed(3) +" HIVE",
+                    memo: `Auction Distro`,
+                  },
+                ];
+                if(payout)daops.push({
+                  type: "put",
+                  path: [
+                    "msa",
+                    `Auction@${acc}`,
+                  ],
+                  data: stringify(transfer),
+                }); //send HIVE out via MS
                 for (var acc2 in granted[acc]){
                     if (acc2 == "t")continue
                     cspk[acc2] = cspk[acc2] ? cspk[acc2] + parseInt(forDist * granted[acc][acc2] / granted[acc].t) : parseInt(forDist * granted[acc][acc2] / granted[acc].t)
@@ -436,6 +458,7 @@ function dao(num) {
                 }
                 spk.u += forDist - thisDist
             }
+            stats.hive_pool = ihive - thive
             if(!stats.paid_val_count)stats.paid_val_count = 0
             const rewardedAccounts = Object.keys(cspk).length
             post = post + `*****\n### SPK Report\n* ${(stats.spk_minted_today / 1000).toFixed(3)} SPK minted today.\n* ${stats.val_count - stats.paid_val_count} file verifications today.\n* ${rewardedServices} accounts rewarded for storage and validation.\n* ${rewardedAccounts} accounts rewarded for staking LARYNX to the above service providers.\n* ${fancyBytes(stats.total_bytes)} stored in network.\n${stats.total_files} files in network.`

@@ -1333,107 +1333,104 @@ exports.transfer = (json, pc) => {
                 order.token != 'SPK' &&
                 order.pair == "hive" &&
                 (order.type == "MARKET" ||
-                  (order.type == "LIMIT" &&
-                    order.rate >= stats.icoPrice / 1000))
+                  order.type == "AUCTION")
               ) {
-                console.log("ICO");
-                let purchase;
-                const transfer = [
-                  "transfer",
-                  {
-                    from: config.msaccount,
-                    to: config.mainICO,
-                    amount:
-                      parseFloat(remaining / 1000).toFixed(3) +
-                      " " +
-                      order.pair.toUpperCase(),
-                    memo: `ICO Buy from ${json.from}:${json.transaction_id}`,
-                  },
-                ];
-                ops.push({
-                  type: "put",
-                  path: [
-                    "msa",
-                    `ICO@${json.from}:${json.transaction_id}:${json.block_num}`,
-                  ],
-                  data: stringify(transfer),
-                }); //send HIVE out via MS
-                dex.tick = parseFloat(stats.icoPrice / 1000).toFixed(6);
-                if (!stats.outOnBlock) {
-                  purchase = parseInt((remaining / stats.icoPrice) * 1000);
-                  filled += purchase;
-                  if (purchase < inv) {
-                    inv -= purchase;
-                    bal += purchase;
-                    his[`${json.block_num}:${i}:${json.transaction_id}`] = {
-                      type: "buy",
-                      t: Date.parse(json.timestamp),
-                      block: json.block_num,
-                      base_vol: purchase,
-                      target_vol: remaining,
-                      target: order.pair,
-                      price: parseFloat(stats.icoPrice / 1000).toFixed(6),
-                      id: json.transaction_id + i,
-                    };
-                    const msg = `@${json.from}| bought ${parseFloat(
-                      purchase / 1000
-                    ).toFixed(3)} ${order.token == 'SPK' ? 'SPK' : 'LARYNX'} with ${parseFloat(
-                      remaining / 1000
-                    ).toFixed(3)} HIVE`;
-                    ops.push(
-                      {
-                        type: "put",
-                        path: [
-                          "feed",
-                          `${json.block_num}:${json.transaction_id}:${i}`,
-                        ],
-                        data: msg,
-                      },
-                      { type: "put", path: [order.token == 'SPK' ? 'spk' : 'balances', "ri"], data: inv }
-                    );
-                  } else {
-                    bal += inv;
-                    const left = purchase - inv;
-                    stats.outOnBlock = json.block_num;
-                    his[`${json.block_num}:${i}:${json.transaction_id}`] = {
-                      type: "buy",
-                      t: Date.parse(json.timestamp),
-                      block: json.block_num,
-                      base_vol: inv,
-                      target_vol: remaining,
-                      target: order.pair,
-                      price: parseFloat(stats.icoPrice / 1000).toFixed(6),
-                      id: json.transaction_id + i,
-                    };
-                    const msg = `@${json.from}| bought ALL ${parseFloat(
-                      parseInt(purchase - left)
-                    ).toFixed(3)} ${order.token == 'SPK' ? 'SPK' : 'LARYNX'} with ${parseFloat(
-                      parseInt(order.amount) / 1000
-                    ).toFixed(3)} HIVE. And bid in the over-auction`;
-                    ops.push(
-                      {
-                        type: "put",
-                        path: ["ico", `${json.block_num}`, json.from],
-                        data: parseInt((order.amount * left) / purchase),
-                      },
-                      { type: "put", path: [order.token == 'SPK' ? 'spk' : 'balances', "ri"], data: 0 },
-                      {
-                        type: "put",
-                        path: [
-                          "feed",
-                          `${json.block_num}:${json.transaction_id}`,
-                        ],
-                        data: msg,
-                      }
-                    );
-                  }
-                  remaining = 0;
+                console.log("Auction");
+                let purchase = 0
+                // const transfer = [
+                //   "transfer",
+                //   {
+                //     from: config.msaccount,
+                //     to: config.mainICO,
+                //     amount:
+                //       parseFloat(remaining / 1000).toFixed(3) +
+                //       " " +
+                //       order.pair.toUpperCase(),
+                //     memo: `ICO Buy from ${json.from}:${json.transaction_id}`,
+                //   },
+                // ];
+                // ops.push({
+                //   type: "put",
+                //   path: [
+                //     "msa",
+                //     `ICO@${json.from}:${json.transaction_id}:${json.block_num}`,
+                //   ],
+                //   data: stringify(transfer),
+                // }); //send HIVE out via MS
+                //dex.tick = parseFloat(stats.icoPrice / 1000).toFixed(6);
+                if (false) { //stats.outonblock
+                  // purchase = parseInt((remaining / stats.icoPrice) * 1000);
+                  // filled += purchase;
+                  // if (purchase < inv) {
+                  //   inv -= purchase;
+                  //   bal += purchase;
+                  //   his[`${json.block_num}:${i}:${json.transaction_id}`] = {
+                  //     type: "buy",
+                  //     t: Date.parse(json.timestamp),
+                  //     block: json.block_num,
+                  //     base_vol: purchase,
+                  //     target_vol: remaining,
+                  //     target: order.pair,
+                  //     price: parseFloat(stats.icoPrice / 1000).toFixed(6),
+                  //     id: json.transaction_id + i,
+                  //   };
+                  //   const msg = `@${json.from}| bought ${parseFloat(
+                  //     purchase / 1000
+                  //   ).toFixed(3)} ${order.token == 'SPK' ? 'SPK' : 'LARYNX'} with ${parseFloat(
+                  //     remaining / 1000
+                  //   ).toFixed(3)} HIVE`;
+                  //   ops.push(
+                  //     {
+                  //       type: "put",
+                  //       path: [
+                  //         "feed",
+                  //         `${json.block_num}:${json.transaction_id}:${i}`,
+                  //       ],
+                  //       data: msg,
+                  //     },
+                  //     { type: "put", path: [order.token == 'SPK' ? 'spk' : 'balances', "ri"], data: inv }
+                  //   );
+                  // } else {
+                  //   bal += inv;
+                  //   const left = purchase - inv;
+                  //   stats.outOnBlock = json.block_num;
+                  //   his[`${json.block_num}:${i}:${json.transaction_id}`] = {
+                  //     type: "buy",
+                  //     t: Date.parse(json.timestamp),
+                  //     block: json.block_num,
+                  //     base_vol: inv,
+                  //     target_vol: remaining,
+                  //     target: order.pair,
+                  //     price: parseFloat(stats.icoPrice / 1000).toFixed(6),
+                  //     id: json.transaction_id + i,
+                  //   };
+                  //   const msg = `@${json.from}| bought ALL ${parseFloat(
+                  //     parseInt(purchase - left)
+                  //   ).toFixed(3)} ${order.token == 'SPK' ? 'SPK' : 'LARYNX'} with ${parseFloat(
+                  //     parseInt(order.amount) / 1000
+                  //   ).toFixed(3)} HIVE. And bid in the over-auction`;
+                  //   ops.push(
+                  //     {
+                  //       type: "put",
+                  //       path: ["ico", `${json.block_num}`, json.from],
+                  //       data: parseInt((order.amount * left) / purchase),
+                  //     },
+                  //     { type: "put", path: [order.token == 'SPK' ? 'spk' : 'balances', "ri"], data: 0 },
+                  //     {
+                  //       type: "put",
+                  //       path: [
+                  //         "feed",
+                  //         `${json.block_num}:${json.transaction_id}`,
+                  //       ],
+                  //       data: msg,
+                  //     }
+                  //   );
+                  // }
+                  // remaining = 0;
                 } else {
-                  const msg = `@${json.from}| bought ALL ${parseFloat(
-                    parseInt(purchase - left)
-                  ).toFixed(3)} ${order.token == 'SPK' ? 'SPK' : 'LARYNX'} with ${parseFloat(
+                  const msg = `@${json.from}|  Entered LARYNX Auction with ${parseFloat(
                     parseInt(amount) / 1000
-                  ).toFixed(3)} HIVE. And bid in the over-auction`;
+                  ).toFixed(3)} HIVE.`;
                   if (config.hookurl || config.status)
                     postToDiscord(
                       msg,
@@ -1442,7 +1439,7 @@ exports.transfer = (json, pc) => {
                   ops = [
                     {
                       type: "put",
-                      path: ["ico", `${json.block_num}`, json.from],
+                      path: ["auction", `${json.block_num}`, json.from],
                       data: parseInt(amount),
                     },
                     {

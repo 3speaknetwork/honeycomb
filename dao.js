@@ -45,9 +45,11 @@ function dao(num) {
             PcBroca = getPathObj(['cbroca']),
             PvBroca = getPathObj(['vbroca']),
             PSpk = getPathObj(['spk']),
+            PcSpk = getPathObj(['cspk']),
+            PcSpow = getPathObj(['spow']),
             Pgranted = getPathObj(['granted']),
             Pservices = getPathObj(['services'])
-        Promise.all([Pnews, Pbals, Prunners, Pnodes, Pstats, Pdelegations, Pico, Pdex, Pbr, Ppbal, Pnomen, Pposts, Pfeed, Ppaid, Pgranting, Pgranted, Pcbals, Pgov, Pvals, PcBroca, PSpk, PvBroca, Pservices]).then(function(v) {
+        Promise.all([Pnews, Pbals, Prunners, Pnodes, Pstats, Pdelegations, Pico, Pdex, Pbr, Ppbal, Pnomen, Pposts, Pfeed, Ppaid, Pgranting, Pgranted, Pcbals, Pgov, Pvals, PcBroca, PSpk, PvBroca, Pservices, PcSpk, PcSpow]).then(function(v) {
             daops.push({ type: 'del', path: ['postQueue'] });
             daops.push({ type: 'del', path: ['br'] });
             daops.push({ type: 'del', path: ['rolling'] });
@@ -78,7 +80,9 @@ function dao(num) {
                 cbroca = v[19],
                 spk = v[20],
                 vbroca = v[21],
-                services = v[22]
+                services = v[22],
+                cspk = v[23],
+                spow = v[24]
             // for(var i = 0; i < dist.length;i++){
             //     if(dist[i][0].split('div:')[1]){
             //         addMT(['div', dist[i][0].split('div:')[1], 'b'], dist[i][1] )
@@ -361,7 +365,6 @@ function dao(num) {
             stats.movingWeight.dailyPool = bals.ra
             const inflationHedge = parseInt(( bals.ra * (gov.t / stats.tokenSupply))) // reward gov holders with inflation to balance inflationary forces
             bals.rn = bals.rn + inflationHedge
-            stats.spk_interest_rate++
             bals.ra -= inflationHedge
             bals.rb += bals.ra
             bals.ra = 0
@@ -378,8 +381,9 @@ function dao(num) {
             const oldDailyTrend = stats.broca_daily_trend
             stats.broca_daily_ema = parseInt((totBroca - oldEMA) * 0.1 + oldEMA) 
             stats.broca_daily_trend = parseInt(stats.broca_daily_ema - oldEMA) // use this number to increase or decrease the max broca size
-            stats.utilization = parseInt((totBroca * 10000) / (spk.t * 100000) / stats.vals_target) // 51408 assumes 1/2 long tail rewards, 95.2% of checks accepted, and staking reawrds are equlized
-            if(!stats.target_utilization)stats.target_utilization == stats.utilization * 2 //ramp up to target utilization
+            stats.utilization = parseInt((totBroca * 10000) / (spow.t * 100000) / stats.vals_target) // 51408 assumes 1/2 long tail rewards, 95.2% of checks accepted, and staking reawrds are equlized
+            if(!stats.target_utilization)stats.target_utilization = stats.utilization * 2 //ramp up to target utilization
+            if(!stats.staking_rewards)stats.staking_rewards = 2500
             else if (stats.target_utilization < 5000)stats.target_utilization += 10
             else if (stats.target_utilization > 5000)stats.target_utilization = 5000
             const diff = stats.utilization - stats.target_utilization
@@ -395,6 +399,7 @@ function dao(num) {
                 stats.spk_clawback = parseInt(diff / -10) // .5% clawback minimum 5% maximum
             }
             var newSPK = parseInt(totBroca / stats.spk_interest_rate)
+            stats.spk_minted_today = newSpk
             spk.t += newSPK
             spk.u += newSPK //unissued
             const StakingRewards = parseInt(spk.u * stats.staking_rewards / 10000)
@@ -406,28 +411,35 @@ function dao(num) {
             spk.u -= StorageRewards
             for (var acc in cbroca){
                 const share = parseInt(StorageRewards * cbroca[acc] / totBroca)
-                spk[acc] = spk[acc] ? spk[acc] + share : share
+                cspk[acc] = cspk[acc] ? cspk[acc] + share : share
                 SpkShares[acc] = share
                 StorageDist += share
             }
             for (var acc in vbroca){
                 const share = parseInt(StorageRewards * vbroca[acc] / totBroca)
-                spk[acc] = spk[acc] ? spk[acc] + share : share
+                cspk[acc] = cspk[acc] ? cspk[acc] + share : share
                 StorageDist += share
             }
+            const rewardedServices = Object.keys(cspk).length
             spk.u = spk.u + StorageRewards - StorageDist
             for( var acc in SpkShares){
-                const share = parseInt( StakingRewards * SpkShares[acc] / StorageDist) 
+                const share = parseInt( StakingRewards * SpkShares[acc] / StorageDist)
+                if(!share)continue
                 const theirShare = services[acc] && granted[acc] ? parseInt((services[acc].s.c * 5)/(granted[acc].t + (services[acc].s.c * 5)) * share) : 0
                 const forDist = share - theirShare
-                spk[acc] += theirShare
+                cspk[acc] += theirShare
                 var thisDist = theirShare
                 for (var acc2 in granted[acc]){
-                    spk[acc2] = spk[acc2] ? spk[acc2] + parseInt(forDist * granted[acc][acc2] / granted[acc].t) : parseInt(forDist * granted[acc][acc2] / granted[acc].t)
+                    if (acc2 == "t")continue
+                    cspk[acc2] = cspk[acc2] ? cspk[acc2] + parseInt(forDist * granted[acc][acc2] / granted[acc].t) : parseInt(forDist * granted[acc][acc2] / granted[acc].t)
                     thisDist -= parseInt(forDist * granted[acc][acc2] / granted[acc].t)
                 }
                 spk.u += forDist - thisDist
             }
+            if(!stats.paid_val_count)stats.paid_val_count = 0
+            const rewardedAccounts = Object.keys(cspk).length
+            post = post + `*****\n### SPK Report\n* ${(stats.spk_minted_today / 1000).toFixed(3)} SPK minted today.\n* ${stats.val_count - stats.paid_val_count} file verifications today.\n* ${rewardedServices} accounts rewarded for storage and validation.\n* ${rewardedAccounts} accounts rewarded for staking LARYNX to the above service providers.\n* ${fancyBytes(stats.total_bytes)} stored in network.\n${stats.total_files} files in network.`
+            stats.paid_val_count = stats.val_count
             //const BrocaPerSpk = spk.u > totBroca ? parseInt(spk.u / totBroca) : parseInt(totBroca / spk.u)
             //const SpkBig = spk.u > totBroca
             // const rewardBig = bals.rb > totBroca
@@ -530,6 +542,8 @@ function dao(num) {
             daops.push({ type: 'put', path: ['stats'], data: stats });
             daops.push({ type: 'put', path: ['balances'], data: bals });
             daops.push({ type: 'put', path: ['cbalances'], data: cbals });
+            daops.push({ type: 'put', path: ['cspk'], data: cspk });
+            daops.push({ type: 'put', path: ['spk'], data: spk });
             daops.push({ type: 'put', path: ['posts'], data: cpost });
             daops.push({ type: 'put', path: ['markets', 'node'], data: mnode });
             daops.push({ type: 'put', path: ['delegations'], data: deles });
@@ -550,6 +564,15 @@ function dao(num) {
 }
 
 exports.dao = dao;
+
+function fancyBytes(bytes, decimals = 0) {
+    var counter = 0, p = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
+    while (bytes > 1024) {
+        bytes = bytes / 1024
+        counter++
+    }
+    return `${this.toFixed(bytes, decimals)} ${p[counter]}B`
+}
 
 function Distro(){
     return new Promise ((resolve, reject)=>{

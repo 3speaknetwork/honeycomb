@@ -2940,9 +2940,10 @@ exports.user = (req, res, next) => {
         pContract = getPathObj(["contract", un]),
         pspkVote = getPathObj(["spkVote", un]),
         pNode = getPathObj(["markets", "node", un]),
-        pStorage = getPathObj(["service", "IPFS", un]);
+        pStorage = getPathObj(["service", "IPFS", un]),
+        pcspk = getPathNum(['cspk', un])
     res.setHeader('Content-Type', 'application/json');
-    Promise.all([bal, pb, lp, contracts, incol, gp, pup, pdown, lg, cbal, claims, pspk, pspkb, tick, powdown, govdown, chron, ppubKey, pspow, pbroca, pChannels, pspkVote, pContract, pStorage, pNode])
+    Promise.all([bal, pb, lp, contracts, incol, gp, pup, pdown, lg, cbal, claims, pspk, pspkb, tick, powdown, govdown, chron, ppubKey, pspow, pbroca, pChannels, pspkVote, pContract, pStorage, pNode, pcspk])
         .then(function(v) {
             var arr = []
             for (var i in v[3]) {
@@ -2974,6 +2975,7 @@ exports.user = (req, res, next) => {
                       name: un,
                       balance: v[0],
                       claim: v[9],
+                      claim_spk: v[25],
                       drop: {
                         availible: {
                           amount: 0,

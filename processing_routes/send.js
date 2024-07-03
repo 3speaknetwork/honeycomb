@@ -101,17 +101,21 @@ exports.spk_send = (json, from, active, pc) => {
 
 exports.shares_claim = (json, from, active, pc) => {
     let fbalp = getPathNum(['cbalances', from]),
-        tbp = getPathNum(['balances', from])
+        tbp = getPathNum(['balances', from]),
+        pspk = getPathNum(['spk', from]),
+        pcspk = getPathNum(['cspk', from])
         // Pinterest = reward_spk(from, json.block_num)
-    Promise.all([fbalp, tbp])
+    Promise.all([fbalp, tbp, pspk, pcspk])
         .then(bals => {
             let fbal = bals[0],
                 tbal = bals[1],
                 ops = [],
                 claim = parseInt(fbal);
             if (claim > 0) {
-                const msg = `@${from}| Shares claimed: ${parseFloat(parseInt(claim) / 1000).toFixed(3)} ${config.TOKEN}`
+                const msg = `@${from}| Claimed: ${parseFloat(parseInt(claim) / 1000).toFixed(3)}${bals[3] ? ' ' : '' }${config.TOKEN} ${bals[3] ? parseFloat(parseInt(bals[3]) / 1000).toFixed(3) : ''} ${bals[3] ? 'SPK' : ''}`
                 ops.push({ type: 'del', path: ['cbalances', from] });
+                ops.push({ type: 'del', path: ['cspk', from] });
+                ops.push({ type: 'put', path: ['spk', from], data: parseInt(bals[3] + bals[2]) });
                 ops.push({ type: 'put', path: ['balances', from], data: parseInt(tbal + claim) });
                 if (config.hookurl || config.status) postToDiscord(msg, `${json.block_num}:${json.transaction_id}`)
                 ops.push({ type: 'put', path: ['feed', `${json.block_num}:${json.transaction_id}`], data: msg });

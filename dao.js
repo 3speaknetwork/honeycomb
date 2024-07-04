@@ -399,7 +399,7 @@ function dao(num) {
                 stats.spk_clawback = parseInt(diff / -10) // .5% clawback minimum 5% maximum
             }
             var newSPK = parseInt(totBroca / stats.spk_interest_rate)
-            stats.spk_minted_today = newSpk
+            stats.spk_minted_today = newSPK
             spk.t += newSPK
             spk.u += newSPK //unissued
             const StakingRewards = parseInt(spk.u * stats.staking_rewards / 10000)
@@ -424,11 +424,14 @@ function dao(num) {
             spk.u = spk.u + StorageRewards - StorageDist
             var ihive = stats.hive_pool
             var thive = 0
+
             for( var acc in SpkShares){
+                
                 const share = parseInt( StakingRewards * SpkShares[acc] / StorageDist)
-                const payout = parseInt( ihive * SpkShares[acc] / StorageDist)
+                const payout = parseInt( ihive * ((cbroca[acc] || 0) + (vbroca[acc] || 0)) / totBroca)
                 thive += payout
-                if(!share || !payout)continue
+                if(!(share || payout))continue
+                if(acc == "undefined")continue
                 const theirShare = services[acc] && granted[acc] ? parseInt((services[acc].s.c * 5)/(granted[acc].t + (services[acc].s.c * 5)) * share) : 0
                 const forDist = share - theirShare
                 cspk[acc] += theirShare
@@ -594,7 +597,7 @@ function fancyBytes(bytes, decimals = 0) {
         bytes = bytes / 1024
         counter++
     }
-    return `${this.toFixed(bytes, decimals)} ${p[counter]}B`
+    return `${bytes.toFixed(decimals)} ${p[counter]}B`
 }
 
 function Distro(){

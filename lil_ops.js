@@ -50,6 +50,7 @@ const forceCancel = (rate, type, block_num) => {
 exports.forceCancel = forceCancel
 
 const broca_calc = (last = '0,0', pow, stats, bn, add = 0) => {
+    if(typeof last != "string")last = '0,0'
     const last_calc = require('./helpers').Base64.toNumber(last.split(',')[1])
     const accured = parseInt((parseFloat(stats.broca_refill) * (bn - last_calc))/(pow * (stats.broca_daily_trend > 1000 ? stats.broca_daily_trend : 1000))) //revisit 
     var total = parseInt(last.split(',')[0]) + accured + add

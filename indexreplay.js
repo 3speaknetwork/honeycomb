@@ -1,5 +1,5 @@
 const config = require("./config");
-const VERSION = "v1.2.0-t19";
+const VERSION = "v1.2.0-t16";
 exports.VERSION = VERSION;
 exports.exit = exit;
 exports.processor = processor;
@@ -167,9 +167,7 @@ exports.Owners = Owners;
 const API = require("./routes/api");
 const HR = require("./processing_routes/index");
 const { NFT, Chron, Watchdog, Log } = require("./helpers");
-var { release } = require("./processing_routes/dex_spk");
-const releaseS = release
-release = require("./processing_routes/dex");
+const { release } = require("./processing_routes/dex");
 const { enforce } = require("./enforce");
 const { tally } = require("./tally");
 const { voter } = require("./voter");
@@ -203,7 +201,7 @@ exports.processor = processor;
 //HIVE API CODE
 
 //Start Program Options
-const replay = "QmNeCszvD1fnvou2UUcXMepsN3t1T9mS1dqLePS5Sa4xav"
+const replay = "QmTfurrig3zoF3ucMzRM69qoGoa1eTB924MSSHyZ8E5zcK"
 startWith(replay, true);
 //dynStart();
 Watchdog.monitor();
@@ -582,13 +580,6 @@ function startApp() {
                         [res, rej, "info"]
                       );
                       break;
-		    case "expires":
-                      releaseS(b.from, b.txid, num);
-                      store.batch(
-                        [{ type: "del", path: ["chrono", passed.delKey] }],
-                        [res, rej, "info"]
-                      );
-                      break;
                     case "check":
                       enforce(b.agent, b.txid, { id: b.id, acc: b.acc }, num);
                       store.batch(
@@ -651,12 +642,10 @@ function startApp() {
                       ).then((x) => res(x));
                       break;
                     case "contract_close":
-                      let Pcontract = getPathObj(['contract', b.fo, b.id]),
-                        Pstatss = getPathObj(["stats"]),
-                        Pbrocaa = getPathObj(["broca", b.fo]),
-                        Ppowa = getPathObj(["spow", b.fo]);
+                      let Pcontract = getPathObj(['contracts', b.to, b.id]),
+                        Pstatss = getPathObj(["stats"])
                       Chron.contractClose(
-                        [Pcontract, Pstatss, Pbrocaa, Ppowa],
+                        [Pcontract, Pstatss],
                         passed.delKey,
                         num,
                         passed.delKey.split(":")[1],
@@ -786,8 +775,8 @@ function startApp() {
                   Hive.getAccounts([config.msaccount]).then((r) => {
                     getPathObj(['stats']).then(stats => {
                       try {
-                        plasma.hbd_offset = parseInt(parseFloat(r[0].hbd_balance) * 1000)
-                        plasma.hive_offset = parseInt(parseFloat(r[0].balance) * 1000)
+                        plasma.hbd_offset = stats.MSHeld.HBD - parseInt(parseFloat(r[0].hbd_balance) * 1000)
+                        plasma.hive_offset = stats.MSHeld.HIVE - parseInt(parseFloat(r[0].balance) * 1000)
                       } catch (e) { }
                     })
                   });

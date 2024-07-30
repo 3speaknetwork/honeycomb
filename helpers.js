@@ -520,7 +520,7 @@ const Chron = {
     return new Promise((resolve, reject) => {
       Promise.all(promies)
         .then((mem) => {
-          console.log(mem)
+          console.log(delkey)
           let contract = mem[0],
           stats = mem[1],
           ops = [],
@@ -533,7 +533,7 @@ const Chron = {
               id: contract.i,
               file_owner: contract.t,
               block_num: num,
-              transaction_id: `v_op${contract.t}autoExtend${contract.i}`
+              transaction_id: `v_op_${contract.t}_autoExtend_${contract.i}`
             }, contract.t, true, [resolve, reject, 0])
           } else {
             if(contract.df){

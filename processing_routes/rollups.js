@@ -457,6 +457,7 @@ exports.channel_update = (json, from, active, pc) => {
 };
 
 exports.extend = (json, from, active, pc) => {
+  console.log('extend', active , json.broca , json.id , json.file_owner)
   if (active && json.broca && json.id && json.file_owner) {
     var Pbroca = getPathObj(["broca", from]);
     var Ppow = getPathObj(["spow", from])

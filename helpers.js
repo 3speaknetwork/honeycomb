@@ -530,7 +530,7 @@ const Chron = {
           console.log(broca)
           if (contract.c == 3 && renew && parseInt(broca.split(',')[0]) > 100) {
             require("./processing_routes/index").extend({
-              broca: parseInt(broca.split(',')[0]) > parseInt( 3 * contract.r / contract.p ) ? parseInt( 3 * contract.r / contract.p ) : parseInt(parseInt(broca.split(',')[0]) / 2 ),
+              broca: parseInt(broca.split(',')[0]) > parseInt( (3 * contract.r + 1) / contract.p ) ? parseInt( (3 * contract.r + 1) / contract.p ) : parseInt(parseInt(broca.split(',')[0]) / 2 ),
               id: contract.i,
               file_owner: contract.t,
               block_num: num,

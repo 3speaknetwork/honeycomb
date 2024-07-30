@@ -527,10 +527,9 @@ const Chron = {
           bytes = 0,
           broca = broca_calc(mem[2], mem[3], stats, num),
           renew = contract.m ? (contract.m.indexOf('"') >= 0 ? Base64.toNumber(JSON.parse(contract.m)[0]) & 1 : Base64.toNumber(contract.m[0]) & 1) : 0
-          console.log(broca)
           if (contract.c == 3 && renew && parseInt(broca.split(',')[0]) > 100) {
             require("./processing_routes/index").extend({
-              broca: parseInt(broca.split(',')[0]) > parseInt( (3 * contract.r + 1) / contract.p ) ? parseInt( (3 * contract.r + 1) / contract.p ) : parseInt(parseInt(broca.split(',')[0]) / 2 ),
+              broca: parseInt(broca.split(',')[0]) > parseInt( 3 * contract.r / contract.p ) ? parseInt( 3 * contract.r / contract.p ) + 1 : parseInt(parseInt(broca.split(',')[0]) / 2 ) + 1,
               id: contract.i,
               file_owner: contract.t,
               block_num: num,

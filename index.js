@@ -204,8 +204,8 @@ exports.processor = processor;
 
 //Start Program Options
 const replay = "QmZbMuCt5naUtcimhSVTNuA1iTAZryBizNZFTAYzyWoVsv"
-startWith(replay, true);
-//dynStart();
+//startWith(replay, true);
+dynStart();
 Watchdog.monitor();
 
 // API defs

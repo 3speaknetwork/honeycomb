@@ -697,7 +697,7 @@ function startApp() {
         function every(stats) {
           return new Promise((res, rej) => {
             HR.margins(num).then(r => {
-              HR.poa(num, prand, stats).then(r => {
+              HR.poa(num, prand, stats, API.RAM.behind < 50 ? true : false).then(r => {
                 let promises = [];
                 if (num % 100 !== 50) {
                   if (mso_keys.length && !config.mirrorNet) {

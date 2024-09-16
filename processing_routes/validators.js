@@ -342,7 +342,7 @@ function PA(Name, CID, peerid, SALT, bn) {
   socket.connect(`${config.poav_address}/validate`)
 }
 
-exports.poa = function (block, prand, stats) {
+exports.poa = function (block, prand, stats, realTime = false) {
   return new Promise((res, rej) => {
     let ops = [{
       type: 'put',
@@ -350,7 +350,7 @@ exports.poa = function (block, prand, stats) {
       data: prand
     }]
     // build rando value from base38 account name and base 16 prand: convert random value to base 58: set range according to val votes
-    PoA.Validate(block, prand, stats)
+    if(realTime)PoA.Validate(block, prand, stats)
     store.batch(ops, [res, rej, 1])
   })
 }
